@@ -1,11 +1,13 @@
-// Minimal no-deps Node server with MongoDB Atlas Data API
-// Uses only built-in 'http' and 'https'. Store secrets in environment variables or a local .env file (not committed).
-// Required env: DATA_API_ENDPOINT, DATA_API_KEY, DATA_API_DATABASE, DATA_API_COLLECTION
+// Minimal Node server for Sahayata
+// Now prefers direct MongoDB connection (MONGODB_URI). Falls back to Atlas Data API if MONGODB_URI is not set.
+// Env (direct driver): MONGODB_URI, DATA_API_DATABASE (or MONGODB_DB), DATA_API_COLLECTION (or MONGODB_COLLECTION)
+// Env (fallback Data API): DATA_API_ENDPOINT, DATA_API_KEY, DATA_API_DATABASE, DATA_API_COLLECTION
 
 const http = require('http');
 const https = require('https');
 const fs = require('fs');
 const path = require('path');
+let MongoClient, ServerApiVersion; // lazy require when used
 
 // Lightweight .env loader (no dependencies). Looks for ./backend/.env and ../.env.
 // Only sets vars that are not already defined in process.env.
@@ -39,6 +41,21 @@ const path = require('path');
 })();
 
 const PORT = process.env.PORT || 3000;
+
+// --- Mongo driver setup (optional) ---
+let mongoClient = null;
+let mongoDb = null;
+async function initMongo(){
+  if(mongoDb) return mongoDb;
+  const uri = process.env.MONGODB_URI;
+  if(!uri) return null;
+  if(!MongoClient){ ({ MongoClient, ServerApiVersion } = require('mongodb')); }
+  mongoClient = new MongoClient(uri, { serverApi: { version: ServerApiVersion.v1, strict: true, deprecationErrors: true } });
+  await mongoClient.connect();
+  const dbName = process.env.MONGODB_DB || process.env.DATA_API_DATABASE || 'sahayata';
+  mongoDb = mongoClient.db(dbName);
+  return mongoDb;
+}
 
 function json(res, code, payload){
   const body = JSON.stringify(payload);
@@ -93,22 +110,31 @@ async function handle(req, res){
   // CORS preflight
   if(req.method === 'OPTIONS') return json(res, 200, { ok: true });
 
-  if(req.url === '/health') return json(res, 200, { ok: true });
+  if(req.url === '/health'){
+    const hasUri = Boolean(process.env.MONGODB_URI);
+    try{
+      const db = await initMongo();
+      const name = process.env.MONGODB_COLLECTION || process.env.DATA_API_COLLECTION || 'notes';
+      const count = db ? await db.collection(name).countDocuments() : null;
+      return json(res, 200, { ok: true, direct: { enabled: hasUri, count } });
+    }catch(e){ return json(res, 200, { ok:true, direct:{ enabled: hasUri, error: e.message } }); }
+  }
 
   if(req.url === '/api/notes' && req.method === 'POST'){
     try{
       const body = await readBody(req);
       const { mood = 'unknown', note = '', createdAt = new Date().toISOString() } = body || {};
+      const collection = process.env.MONGODB_COLLECTION || process.env.DATA_API_COLLECTION || 'notes';
+      // Prefer direct driver
+      const db = await initMongo();
+      if(db){
+        const r = await db.collection(collection).insertOne({ mood, note, createdAt });
+        return json(res, 200, { ok: true, result: { insertedId: r.insertedId } });
+      }
+      // Fallback Data API
       const database = process.env.DATA_API_DATABASE;
-      const collection = process.env.DATA_API_COLLECTION || 'notes';
-  const dataSource = process.env.DATA_API_DATASOURCE || 'mongodb-atlas';
-
-      const result = await callDataAPI('action/insertOne', {
-        dataSource,
-        database,
-        collection,
-        document: { mood, note, createdAt }
-      });
+      const dataSource = process.env.DATA_API_DATASOURCE || 'mongodb-atlas';
+      const result = await callDataAPI('action/insertOne', { dataSource, database, collection, document: { mood, note, createdAt } });
       return json(res, 200, { ok: true, result });
     }catch(e){
       return json(res, 500, { ok: false, error: e.message });
@@ -117,16 +143,15 @@ async function handle(req, res){
 
   if(req.url.startsWith('/api/notes') && req.method === 'GET'){
     try{
+      const collection = process.env.MONGODB_COLLECTION || process.env.DATA_API_COLLECTION || 'notes';
+      const db = await initMongo();
+      if(db){
+        const docs = await db.collection(collection).find({}).sort({ createdAt:-1 }).limit(10).toArray();
+        return json(res, 200, { ok:true, result: { documents: docs } });
+      }
       const database = process.env.DATA_API_DATABASE;
-      const collection = process.env.DATA_API_COLLECTION || 'notes';
-  const dataSource = process.env.DATA_API_DATASOURCE || 'mongodb-atlas';
-      const result = await callDataAPI('action/find', {
-        dataSource,
-        database,
-        collection,
-        sort: { createdAt: -1 },
-        limit: 10
-      });
+      const dataSource = process.env.DATA_API_DATASOURCE || 'mongodb-atlas';
+      const result = await callDataAPI('action/find', { dataSource, database, collection, sort: { createdAt: -1 }, limit: 10 });
       return json(res, 200, { ok: true, result });
     }catch(e){
       return json(res, 500, { ok: false, error: e.message });

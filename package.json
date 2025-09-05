@@ -2,8 +2,15 @@
   "name": "sahayata",
   "version": "1.0.0",
   "private": true,
-  "type": "module",
+  "type": "commonjs",
   "dependencies": {
     "mongodb": "^6.8.0"
-  }
+  },
+  "description": "A simple, trustworthy multi‑page site with a minimal Node backend (no packages) that talks to MongoDB Atlas via the Data API.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
 }
