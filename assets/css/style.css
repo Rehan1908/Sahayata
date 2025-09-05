@@ -1,0 +1,94 @@
+/* Minimal, trustworthy UI theme */
+:root{
+  --bg: #0b1020;
+  --card: #121932;
+  --text: #e9eef9;
+  --muted: #b9c2dd;
+  --brand: #2f6fed;
+  --brand-2: #36b38a;
+  --danger: #d13f5b;
+  --ring: rgba(255,255,255,0.1);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
+  background: var(--bg); color: var(--text); line-height: 1.6;
+}
+.container{max-width:1080px; margin-inline:auto; padding: 0 16px}
+.site-header{position:sticky; top:0; background:rgba(11,16,32,0.8); border-bottom:1px solid var(--ring); backdrop-filter: blur(8px);}
+.header-inner{display:flex; align-items:center; justify-content:space-between; gap:16px; padding:12px 0}
+.brand{display:flex; align-items:center; gap:10px; color:var(--text); text-decoration:none; font-weight:700; letter-spacing:.2px}
+.brand-mark{display:inline-grid; place-items:center; width:28px; height:28px; border-radius:8px; background: linear-gradient(135deg, var(--brand), var(--brand-2));}
+.brand-text{font-size:18px}
+.primary-nav{display:flex; gap:12px; flex-wrap: wrap; row-gap:6px}
+.primary-nav a{color:var(--muted); text-decoration:none; padding:8px 10px; border-radius:8px}
+.primary-nav a:hover{color:var(--text); background:rgba(255,255,255,0.06)}
+.hero{padding:48px 0; border-bottom:1px solid var(--ring); background: radial-gradient(800px 300px at 10% 0%, rgba(47,111,237,0.15), transparent 60%)}
+.hero .lead{color:var(--muted)}
+.actions{display:flex; gap:10px; flex-wrap:wrap; margin-top:16px}
+.btn{display:inline-block; padding:10px 14px; border-radius:10px; text-decoration:none; font-weight:600; border:1px solid transparent}
+.btn-primary{background:var(--brand); color:white}
+.btn-primary:hover{filter: brightness(1.05)}
+.btn-ghost{background:transparent; color:var(--text); border-color:var(--ring)}
+.btn-ghost:hover{background:rgba(255,255,255,0.06)}
+.btn-danger{background:var(--danger); color:white}
+.btn-secondary{background:#26335b; color:var(--text); border-color:#33457c}
+.btn:focus-visible{outline:2px solid var(--brand-2); outline-offset:2px}
+/* Grounding button behavior */
+#grounding-btn{min-width:220px}
+#grounding-btn:disabled{opacity:.85; cursor:wait}
+
+/* Headings & section rhythm */
+h1{font-size:2.1rem; line-height:1.2; margin:0 0 10px}
+h2{font-size:1.4rem; line-height:1.3; margin:0 0 8px}
+h3{font-size:1.05rem; line-height:1.35; margin:0 0 6px}
+section{padding: 28px 0}
+
+/* Responsive, tidy card grid for "activities" */
+.grid-3{display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:16px}
+.card{display:block; padding:16px; background:var(--card); border:1px solid var(--ring); border-radius:14px; color:var(--text); text-decoration:none}
+.card:hover{outline:2px solid rgba(54,179,138,0.45)}
+.hero-card{margin-top:20px; padding:14px; background:var(--card); border:1px solid var(--ring); border-radius:14px}
+.stat-list{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; list-style:none; margin:0; padding:0}
+.stat{display:block; font-size:22px; font-weight:700}
+.label{display:block; font-size:13px; color:var(--muted)}
+.features{padding: 28px 0}
+.cta{padding:28px 0; border-top:1px solid var(--ring); border-bottom:1px solid var(--ring); background: radial-gradient(1000px 240px at 20% 0%, rgba(47,111,237,0.10), transparent 60%)}
+.cta-inner{display:flex; align-items:center; justify-content:space-between; gap:16px}
+.cta-text{flex:1}
+.cta-actions{display:flex; gap:12px; align-items:center; flex-wrap:wrap; justify-content:flex-end}
+.cta-actions .btn{white-space:nowrap; min-width:220px; text-align:center}
+.about{padding:32px 0}
+.narrow{max-width:760px}
+.site-footer{border-top:1px solid var(--ring); padding:14px 0; color:var(--muted)}
+.footer-inner{display:flex; align-items:center; justify-content:space-between}
+.sr-only{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); border:0}
+
+/* Lists & content spacing */
+.about ul{margin:8px 0 0 1.1em; padding:0}
+.about li{margin:6px 0}
+
+/* Forms */
+form label{display:block; font-weight:600; font-size:.95rem}
+form select, form textarea, form input[type="text"], form input[type="email"]{
+  width:100%; background:transparent; color:inherit; border:1px solid var(--ring); border-radius:8px; padding:8px; margin-top:6px
+}
+form textarea{resize:vertical}
+
+/* Grounding modal */
+.grounding-overlay{position:fixed; inset:0; background:rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; z-index:1000; padding:20px}
+.grounding-dialog{background:var(--card); border:1px solid var(--ring); border-radius:16px; max-width:560px; width:100%; padding:18px}
+.grounding-head{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px}
+.grounding-title{margin:0; font-size:1.1rem}
+.grounding-close{appearance:none; border:1px solid var(--ring); background:transparent; color:var(--text); border-radius:8px; padding:6px 10px; cursor:pointer}
+.grounding-body{display:grid; grid-template-columns:1fr; gap:12px; place-items:center}
+.grounding-body{grid-template-rows: auto auto auto; gap:16px; text-align:center}
+.breath-ball{width:220px; height:220px; border-radius:50%; background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.18), rgba(47,111,237,0.35)); border:1px solid rgba(255,255,255,0.08); box-shadow: 0 10px 30px rgba(47,111,237,0.25); transform: scale(1); will-change: transform}
+.grounding-instruction{font-weight:600}
+.grounding-sub{color:var(--muted); font-size:.95rem}
+
+@keyframes breath-in { from { transform: scale(1); } to { transform: scale(1.25); } }
+@keyframes breath-out { from { transform: scale(1.25); } to { transform: scale(1); } }
+
+@media (max-width: 860px){ .grid-3{grid-template-columns:1fr} .cta-inner{flex-direction:column; align-items:flex-start} .stat-list{grid-template-columns:1fr} }

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sahayata • Full Report</title>
+  <link href="../assets/css/style.css" rel="stylesheet" />
+  <style>
+    .doc{background:var(--card); border:1px solid var(--ring); border-radius:14px; padding:16px;}
+    .doc pre{white-space:pre-wrap; word-wrap:break-word; font: 14px/1.6 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; color: var(--text)}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html"><span class="brand-mark">✦</span><span class="brand-text">Sahayata</span></a>
+      <nav class="primary-nav">
+        <a href="./section-1.html">Crisis</a>
+        <a href="./section-2.html">Why students hurt</a>
+        <a href="./section-3.html">System gaps</a>
+        <a href="./section-4.html">Product</a>
+        <a href="./section-5.html">Why us</a>
+        <a href="./section-6.html">Roadmap</a>
+        <a href="./section-7.html">Outcomes</a>
+        <a href="./report.html" aria-current="page">Full report</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <h1>Full report (from content.txt)</h1>
+      <p class="lead">Raw, complete text for reference. The other pages present a simplified, navigable UI.</p>
+    </section>
+
+    <section class="about">
+      <div class="doc" id="doc"><pre>Loading…</pre></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© <span id="year"></span> Sahayata</p>
+      <nav>
+        <a href="./section-3.html">Safety & Trust</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script>
+    (async function(){
+      const el = document.querySelector('#doc pre');
+      try{
+        const res = await fetch('../content.txt', { cache: 'no-store' });
+        el.textContent = await res.text();
+      }catch(e){
+        el.textContent = 'Failed to load content.txt: ' + e.message;
+      }
+      const y = document.getElementById('year'); if(y) y.textContent = new Date().getFullYear();
+    })();
+  </script>
+</body>
+</html>

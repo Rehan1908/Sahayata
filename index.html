@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Sahayata – A trusted, student-first mental health lifeline." />
+    <title>Sahayata – A trusted lifeline for India's students</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./assets/css/style.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="/">
+          <span class="brand-mark" aria-hidden="true">✦</span>
+          <span class="brand-text">Sahayata</span>
+        </a>
+        <nav class="primary-nav" aria-label="Primary">
+          <a href="./pages/section-1.html">Crisis</a>
+          <a href="./pages/section-2.html">Why students hurt</a>
+          <a href="./pages/section-3.html">System gaps</a>
+          <a href="./pages/section-4.html">Product</a>
+          <a href="./pages/section-5.html">Why us</a>
+          <a href="./pages/section-6.html">Roadmap</a>
+          <a href="./pages/section-7.html">Outcomes</a>
+          <a href="./pages/report.html">Full report</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="container">
+          <h1>A trusted, student‑first mental health lifeline</h1>
+          <p class="lead">Every day in India, an average of <strong>35 students</strong> die by suicide. Sahayata is a safe, anonymous, and student‑centric ecosystem built to prevent crises and provide help when it’s needed most.</p>
+          <div class="actions">
+            <a class="btn btn-primary" href="./pages/section-4.html">Explore Sahayata</a>
+            <a class="btn btn-ghost" href="./pages/section-1.html">See the data</a>
+          </div>
+          <div class="hero-card" role="region" aria-label="Key facts">
+            <ul class="stat-list">
+              <li><span class="stat">13,000+</span><span class="label">student suicides in 2022 (official)</span></li>
+              <li><span class="stat">2/3</span><span class="label">of suicide deaths are ages 18–45</span></li>
+              <li><span class="stat">37.4M</span><span class="label">students in higher education</span></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="features">
+        <div class="container">
+          <h2 style="margin-bottom:10px">What you can do</h2>
+          <div class="grid-3">
+          <a class="card" href="./pages/section-4.html#dashboard">
+            <h3>Personal guide</h3>
+            <p>Smart dashboard that meets each student where they are.</p>
+          </a>
+          <a class="card" href="./pages/section-4.html#samvad">
+            <h3>Anonymous community</h3>
+            <p>‘Samvad’ hub—safe, moderated peer support.</p>
+          </a>
+          <a class="card" href="./pages/section-4.html#abhyas">
+            <h3>‘Abhyas’ toolkit</h3>
+            <p>Evidence‑based practices for lasting resilience.</p>
+          </a>
+          <a class="card" href="./pages/section-4.html#journeys">
+            <h3>Wellness journeys</h3>
+            <p>Gentle challenges that build healthy habits.</p>
+          </a>
+          <a class="card" href="./pages/section-4.html#aapatkal">
+            <h3>‘Aapatkal’ button</h3>
+            <p>One‑tap access to emergency help—always visible.</p>
+          </a>
+          <a class="card" href="./pages/section-4.html#pro-connect">
+            <h3>Professional connect</h3>
+            <p>Vetted therapists with privacy by design.</p>
+          </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="cta">
+        <div class="container cta-inner">
+          <div class="cta-text">
+            <h2>Need help right now?</h2>
+            <p>If you or someone you know is in immediate danger, use the emergency options below.</p>
+          </div>
+          <div class="cta-actions">
+            <a class="btn btn-danger" href="tel:18005990019" aria-label="Call Tele MANAS 24 by 7 helpline">Call Tele‑MANAS 24×7</a>
+            <button class="btn btn-secondary" id="grounding-btn" aria-describedby="grounding-desc">Try a 60‑second grounding</button>
+            <span id="grounding-desc" class="sr-only">Starts a brief breathing exercise</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="about">
+        <div class="container narrow">
+          <h2>What this is</h2>
+          <p>Sahayata is a non‑commercial initiative designed specifically for Indian higher‑education students. It closes today’s support gaps with an integrated, privacy‑first experience—self‑help, peer support, and professional care in one place.</p>
+          <div class="actions">
+            <a class="btn btn-ghost" href="./pages/section-5.html">Why this works</a>
+            <a class="btn btn-ghost" href="./pages/section-6.html">Our roadmap</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="about">
+        <div class="container narrow">
+          <h2>Anonymous check‑in (demo)</h2>
+          <p>Submit a quick mood note to your local backend. This helps you confirm the Atlas Data API is wired correctly.</p>
+          <form id="checkin-form" style="margin-top:12px; display:grid; gap:10px; max-width:520px">
+            <label>
+              Mood
+              <select id="checkin-mood">
+                <option value="calm">Calm</option>
+                <option value="stressed">Stressed</option>
+                <option value="anxious">Anxious</option>
+                <option value="low">Low</option>
+              </select>
+            </label>
+            <label>
+              Note (optional)
+              <textarea id="checkin-note" rows="3" placeholder="This is anonymous"></textarea>
+            </label>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <button type="submit" class="btn btn-primary">Send</button>
+              <span id="checkin-msg" style="font-size:14px; color:var(--muted)"></span>
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <p>© <span id="year"></span> Sahayata • Privacy‑first • Student‑first</p>
+        <nav aria-label="Footer">
+          <a href="./pages/section-3.html">Safety & Trust</a>
+          <a href="#" id="contact-link">Contact</a>
+        </nav>
+      </div>
+    </footer>
+
+    <!-- Grounding overlay modal -->
+    <div class="grounding-overlay" id="grounding-overlay" style="display:none" role="dialog" aria-modal="true" aria-labelledby="grounding-title">
+      <div class="grounding-dialog">
+        <div class="grounding-head">
+          <h3 class="grounding-title" id="grounding-title">60‑second grounding</h3>
+          <button class="grounding-close" id="grounding-close" aria-label="Close">Close</button>
+        </div>
+        <div class="grounding-body">
+          <div class="breath-ball" id="breath-ball"></div>
+          <div class="grounding-instruction" id="grounding-instruction">Inhale gently… 4 counts</div>
+          <div class="grounding-sub">Follow the circle as it grows (inhale), holds, and shrinks (exhale).</div>
+        </div>
+      </div>
+    </div>
+
+    <script src="./assets/js/main.js"></script>
+  </body>
+  </html>
+
