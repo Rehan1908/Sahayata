@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sahayata • Personal Guide</title>
+  <link href="../assets/css/style.css" rel="stylesheet" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html"><span class="brand-mark">✦</span><span class="brand-text">Sahayata</span></a>
+      <nav class="primary-nav">
+        <a href="./guide.html" aria-current="page">Guide</a>
+        <a href="./samvad.html">Samvad</a>
+        <a href="./abhyas.html">Abhyas</a>
+        <a href="./journeys.html">Journeys</a>
+        <a href="./professionals.html">Professionals</a>
+      </nav>
+    </div>
+  </header>
+  <main class="container">
+    <section class="hero">
+      <h1>Your personal guide</h1>
+      <p class="lead">Answer a few quick questions. We’ll suggest what helps right now.</p>
+    </section>
+    <section class="narrow card">
+      <form id="qform" style="display:grid; gap:14px">
+        <label>How do you feel right now?
+          <select id="mood">
+            <option value="calm">Calm</option>
+            <option value="stressed">Stressed</option>
+            <option value="anxious">Anxious</option>
+            <option value="low">Low</option>
+            <option value="panicky">Panicky</option>
+          </select>
+        </label>
+        <label>What’s bothering you most?
+          <select id="area">
+            <option value="exam">Exams</option>
+            <option value="career">Placements / Career</option>
+            <option value="hostel">Hostel / Loneliness</option>
+            <option value="parents">Parental expectations</option>
+            <option value="other">Something else</option>
+          </select>
+        </label>
+        <label>Would you prefer to…
+          <select id="pref">
+            <option value="self">Try something yourself</option>
+            <option value="talk">Talk to peers</option>
+            <option value="pro">Talk to a professional</option>
+          </select>
+        </label>
+        <div style="display:flex; gap:10px; align-items:center">
+          <button class="btn btn-primary" type="submit">Get suggestions</button>
+          <small id="msg"></small>
+        </div>
+      </form>
+    </section>
+    <section>
+      <div id="recs" class="grid-3"></div>
+    </section>
+  </main>
+  <footer class="site-footer"><div class="container footer-inner"><p>© <span id="year"></span> Sahayata</p></div></footer>
+  <script type="module">
+    import { api, ensureSession } from '../assets/js/app.js';
+    import '../assets/js/main.js';
+    const form = document.getElementById('qform');
+    const recs = document.getElementById('recs');
+    const msg = document.getElementById('msg');
+    form.addEventListener('submit', async (e)=>{
+      e.preventDefault(); msg.textContent='';
+      const mood = document.getElementById('mood').value;
+      const area = document.getElementById('area').value;
+      const pref = document.getElementById('pref').value;
+      const sid = await ensureSession();
+      // log a lightweight check-in
+      try{ await api.post('/api/notes', { mood, note:`guide:${area}/${pref}`, sessionId: sid }); }catch{}
+      const cards = buildRecs(mood, area, pref);
+      recs.innerHTML = cards.map(renderCard).join('');
+    });
+    function renderCard(c){
+      return `<a class="card" href="${c.href}"><h3>${c.title}</h3><p>${c.text}</p></a>`;
+    }
+    function buildRecs(mood, area, pref){
+      const r = [];
+      if(mood==='panicky') r.push({ title:'60‑second grounding', text:'Settle your body first.', href:'../index.html#' });
+      if(pref==='self'){
+        r.push({ title:'Do a quick tool', text:'A 2‑minute practice to steady your mind.', href:'./abhyas.html' });
+        r.push({ title:'Start a journey', text:'Build a small daily habit over time.', href:'./journeys.html' });
+      }
+      if(pref==='talk'){
+        r.push({ title:'Talk anonymously', text:'Share and listen in student‑only spaces.', href:'./samvad.html' });
+      }
+      if(pref==='pro'){
+        r.push({ title:'Find a professional', text:'Vetted therapists who understand students.', href:'./professionals.html' });
+      }
+      // contextual nudge
+      const map = { exam:'mindful-study', career:'thought-diary', hostel:'breathing', parents:'thought-diary' };
+      r.unshift({ title:'Recommended first step', text:'Based on your answers.', href:'./abhyas.html' + '#' + (map[area]||'breathing') });
+      return r;
+    }
+  </script>
+</body>
+</html>

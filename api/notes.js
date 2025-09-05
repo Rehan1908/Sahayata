@@ -8,7 +8,7 @@ async function getDb(){
   const uri = process.env.MONGODB_URI;
   if(!uri) throw new Error('Missing MONGODB_URI');
   if(cachedDb) return cachedDb;
-  const { MongoClient, ServerApiVersion } = await import('mongodb');
+  const { MongoClient, ServerApiVersion } = require('mongodb');
   const client = new MongoClient(uri, {
     serverApi: { version: ServerApiVersion.v1, strict: true, deprecationErrors: true }
   });
@@ -19,7 +19,7 @@ async function getDb(){
   return cachedDb;
 }
 
-export default async function handler(req, res){
+module.exports = async function handler(req, res){
   // CORS not required on Vercel (same origin). Keep a basic preflight if needed.
   if(req.method === 'OPTIONS'){
     res.setHeader('Access-Control-Allow-Origin', '*');

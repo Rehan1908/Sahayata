@@ -1,6 +1,6 @@
-import { getDb } from './_db.js';
+const { getDb } = require('./_db.js');
 
-export default async function handler(req, res){
+module.exports = async function handler(req, res){
   try{
     const db = await getDb();
     const sid = await cryptoRandom();
@@ -14,11 +14,10 @@ async function cryptoRandom(){
   if(typeof crypto !== 'undefined' && crypto.randomUUID){
     return crypto.randomUUID().replace(/-/g,'');
   }
-  if(typeof crypto !== 'undefined' && crypto.getRandomValues){
-    const a = crypto.getRandomValues(new Uint8Array(16));
-    return Array.from(a).map(x=>x.toString(16).padStart(2,'0')).join('');
+  try{
+    const { randomBytes } = require('crypto');
+    return randomBytes(16).toString('hex');
+  }catch{
+    return String(Date.now()) + Math.random().toString(16).slice(2);
   }
-  // fallback dynamic import for Node
-  const { randomBytes } = await import('node:crypto');
-  return randomBytes(16).toString('hex');
 }

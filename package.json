@@ -9,7 +9,9 @@
   "description": "A simple, trustworthy multi‑page site with a minimal Node backend (no packages) that talks to MongoDB Atlas via the Data API.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "dev:server": "node backend/server.js",
+  "dev:seed": "node backend/seed.js",
+  "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC"

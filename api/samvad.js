@@ -1,6 +1,6 @@
-import { getDb } from './_db.js';
+const { getDb } = require('./_db.js');
 
-export default async function handler(req, res){
+module.exports = async function handler(req, res){
   try{
     const db = await getDb();
     const col = db.collection('samvad');

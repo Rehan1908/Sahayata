@@ -1,4 +1,4 @@
-import { getDb } from './_db.js';
+const { getDb } = require('./_db.js');
 
 const DEFAULT_TOOLS = [
   { key:'breathing', title:'2‑minute guided breathing', type:'exercise', minutes:2 },
@@ -6,7 +6,7 @@ const DEFAULT_TOOLS = [
   { key:'mindful-study', title:'Mindful study (5 mins)', type:'exercise', minutes:5 },
 ];
 
-export default async function handler(req, res){
+module.exports = async function handler(req, res){
   try{
     const db = await getDb();
     const toolsCol = db.collection('abhyas_tools');
