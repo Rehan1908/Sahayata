@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sahayata • Wellness Journeys</title>
+  <link href="../assets/css/style.css" rel="stylesheet" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html"><span class="brand-mark">✦</span><span class="brand-text">Sahayata</span></a>
+      <nav class="primary-nav">
+        <a href="./samvad.html">Samvad</a>
+        <a href="./abhyas.html">Abhyas</a>
+        <a href="./journeys.html" aria-current="page">Journeys</a>
+        <a href="./professionals.html">Professionals</a>
+      </nav>
+    </div>
+  </header>
+  <main class="container">
+    <section class="hero"><h1>Wellness Journeys</h1><p class="lead">Gentle programs that build resilience over time.</p></section>
+    <section><div id="list" class="grid"></div></section>
+  </main>
+  <footer class="site-footer"><div class="container footer-inner"><p>© <span id="year"></span> Sahayata</p></div></footer>
+  <script type="module">
+    import { api, ensureSession } from '../assets/js/app.js';
+    import '../assets/js/main.js';
+    const root = document.getElementById('list');
+    async function load(){
+      const res = await api.get('/api/journeys');
+      const items = res.journeys && res.journeys.length ? res.journeys : [
+        { key:'resilience-14', title:'14‑Day Resilience', steps:14 },
+        { key:'mindfulness-30', title:'30‑Day Mindfulness', steps:30 },
+      ];
+      root.innerHTML = items.map(j=>`<div class="card"><h3>${j.title}</h3><p>${j.steps||14} steps</p><button class="btn" data-key="${j.key}">Mark next step</button></div>`).join('');
+      root.querySelectorAll('button[data-key]').forEach(btn=>btn.addEventListener('click', async ()=>{
+        const sid = await ensureSession();
+        await api.post('/api/journeys', { sessionId: sid, journeyKey: btn.dataset.key });
+        btn.textContent = 'Progress saved ✓';
+      }));
+    }
+    load();
+  </script>
+</body>
+</html>

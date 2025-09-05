@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sahayata • Samvad (Anonymous)</title>
+  <link href="../assets/css/style.css" rel="stylesheet" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html"><span class="brand-mark">✦</span><span class="brand-text">Sahayata</span></a>
+      <nav class="primary-nav">
+        <a href="./samvad.html" aria-current="page">Samvad</a>
+        <a href="./abhyas.html">Abhyas</a>
+        <a href="./journeys.html">Journeys</a>
+        <a href="./professionals.html">Professionals</a>
+      </nav>
+    </div>
+  </header>
+  <main class="container">
+    <section class="hero">
+      <h1>Samvad Hub</h1>
+      <p class="lead">Anonymous student‑only conversations. Be kind. No PII.</p>
+    </section>
+    <section>
+      <div class="narrow">
+        <label>Topic
+          <select id="topic">
+            <option value="general">General</option>
+            <option value="exam">Exam Stress</option>
+            <option value="career">Career Fear</option>
+            <option value="hostel">Hostel Loneliness</option>
+          </select>
+        </label>
+        <div id="feed" class="card-list" style="margin:1rem 0"></div>
+        <form id="post-form" class="card">
+          <textarea id="post-text" rows="3" placeholder="Share what’s on your mind…"></textarea>
+          <button class="btn" type="submit">Post anonymously</button>
+          <small id="post-msg"></small>
+        </form>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer"><div class="container footer-inner"><p>© <span id="year"></span> Sahayata</p></div></footer>
+  <script type="module">
+    import { api, ensureSession } from '../assets/js/app.js';
+    import '../assets/js/main.js';
+    const topicSel = document.getElementById('topic');
+    const feed = document.getElementById('feed');
+    const form = document.getElementById('post-form');
+    const text = document.getElementById('post-text');
+    const msg = document.getElementById('post-msg');
+    async function load(){
+      const t = topicSel.value;
+      const res = await api.get(`/api/samvad?topic=${encodeURIComponent(t)}`);
+      feed.innerHTML = (res.documents||[]).map(d=>`<div class="card"><p>${escapeHtml(d.text)}</p><small>${new Date(d.createdAt).toLocaleString()}</small></div>`).join('') || '<p>No posts yet.</p>';
+    }
+    topicSel.addEventListener('change', load);
+    form.addEventListener('submit', async e=>{
+      e.preventDefault(); msg.textContent='';
+      const t = text.value.trim(); if(!t) return;
+      const sid = await ensureSession();
+      await api.post('/api/samvad', { sessionId: sid, topic: topicSel.value, text: t });
+      text.value=''; msg.textContent='Posted.'; await load();
+    });
+    function escapeHtml(s){ return s.replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+    load();
+  </script>
+</body>
+</html>
