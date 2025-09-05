@@ -16,7 +16,7 @@ Open `index.html` directly, or serve the folder with any static server.
 ## Backend (no packages)
 Uses only Node's built‑ins. Configure MongoDB Atlas Data API env vars (create a `backend/.env` from `backend/.env.example`):
 
-- `DATA_API_ENDPOINT` – e.g. `https://data.mongodb-api.com/app/<app-id>/endpoint/data/v1/`
+- `DATA_API_ENDPOINT` – Use your region domain, e.g. `https://ap-south-1.aws.data.mongodb-api.com/app/<app-id>/endpoint/data/v1/`
 - `DATA_API_KEY` – Your Data API key
 - `DATA_API_DATABASE` – Your database name
 - `DATA_API_COLLECTION` – Collection name (default `notes`)
@@ -40,7 +40,7 @@ This repo includes a Vercel serverless function at `api/notes.js` that proxies t
 1) Push this project to a Git repo (GitHub/GitLab/Bitbucket).
 2) In Vercel, import the repo.
 3) Add Environment Variables in Vercel Project Settings (Production/Preview/Development):
-	- `DATA_API_ENDPOINT` – https://data.mongodb-api.com/app/<AppID>/endpoint/data/v1/
+		- `DATA_API_ENDPOINT` – Region-specific, e.g. https://ap-south-1.aws.data.mongodb-api.com/app/<AppID>/endpoint/data/v1/
 	- `DATA_API_KEY` – your Data API key
 	- `DATA_API_DATABASE` – sahayata (or your DB)
 	- `DATA_API_COLLECTION` – notes (or your collection)
