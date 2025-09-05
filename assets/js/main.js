@@ -120,19 +120,27 @@
   const mood = document.getElementById('checkin-mood');
   const note = document.getElementById('checkin-note');
   const msg  = document.getElementById('checkin-msg');
+  // Pick API base: use relative on Vercel, fallback to localhost:3000 during local dev
+  const isVercel = /vercel\.app$/i.test(window.location.hostname);
+  const isLocalStatic = (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') && window.location.port !== '3000';
+  const API_BASE = isVercel ? '' : (isLocalStatic ? 'http://localhost:3000' : '');
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     msg.textContent = 'Sending…';
     msg.style.color = '#b9c2dd';
     try{
-  const res = await fetch('/api/notes', {
+      const res = await fetch(`${API_BASE}/api/notes`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ mood: mood.value, note: note.value })
       });
-      const data = await res.json();
-      if(!res.ok || !data.ok){ throw new Error(data.error || 'Request failed'); }
+      const ctype = res.headers.get('content-type') || '';
+      const payload = ctype.includes('application/json') ? await res.json() : { raw: await res.text() };
+      if(!res.ok || (payload && payload.ok === false)){
+        const detail = payload && (payload.error || payload.raw) ? (payload.error || payload.raw) : 'Request failed';
+        throw new Error(`HTTP ${res.status}: ${detail}`);
+      }
       msg.textContent = 'Saved anonymously.';
       msg.style.color = '#36b38a';
       form.reset();
