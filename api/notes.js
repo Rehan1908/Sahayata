@@ -7,20 +7,36 @@ async function callDataAPI(actionPath, payload){
   if(!endpoint || !apiKey){
     throw new Error('Missing DATA_API_ENDPOINT or DATA_API_KEY');
   }
-  const url = new URL(actionPath, endpoint).toString();
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'api-key': apiKey,
-    },
-    body: JSON.stringify(payload)
-  });
-  const text = await res.text();
-  if(!res.ok){
-    throw new Error(text || 'Data API error');
+  // Validate endpoint is the new Data API host (region-specific) and not the legacy HTTPS Endpoints
+  const endpointOk = /data\.mongodb-api\.com\/app\/.+\/endpoint\/data\/v1\/?$/i.test(endpoint);
+  if(!endpointOk){
+    const hint = 'DATA_API_ENDPOINT must be like https://<region>.aws.data.mongodb-api.com/app/<AppID>/endpoint/data/v1/ (copy from App Services → Data API).';
+    const err = new Error('Invalid DATA_API_ENDPOINT (likely using legacy HTTPS Endpoints). ' + hint);
+    err.meta = { endpoint };
+    throw err;
   }
-  try{ return JSON.parse(text); } catch{ return { raw: text }; }
+  const url = new URL(actionPath, endpoint).toString();
+  try{
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'api-key': apiKey,
+      },
+      body: JSON.stringify(payload)
+    });
+    const text = await res.text();
+    if(!res.ok){
+      const err = new Error(text || 'Data API error');
+      err.meta = { url, status: res.status };
+      throw err;
+    }
+    try{ return JSON.parse(text); } catch{ return { raw: text }; }
+  }catch(e){
+    // rethrow with url context
+    if(!e.meta){ e.meta = { url, status: 0 }; }
+    throw e;
+  }
 }
 
 export default async function handler(req, res){
@@ -51,6 +67,7 @@ export default async function handler(req, res){
 
     return res.status(405).json({ ok:false, error: 'Method not allowed' });
   }catch(e){
-  return res.status(500).json({ ok:false, error: e.message });
+    const info = e && e.meta ? e.meta : {};
+    return res.status(500).json({ ok:false, error: e.message, info });
   }
 }

@@ -24,10 +24,11 @@ export default async function handler(req, res){
         body: JSON.stringify(body)
       });
       const text = await r.text();
-      result.dataApiStatus = r.status;
+      result.dataApiStatus = { ok: r.ok, status: r.status, body: JSON.parse(text) };
       // try JSON parse, else include truncated text
       try{ result.dataApiBody = JSON.parse(text); }
       catch{ result.dataApiBody = text.slice(0, 300); }
+      result.resolvedFindUrl = url;
     }
   }catch(e){
     result.ok = false;
