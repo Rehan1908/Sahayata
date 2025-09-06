@@ -12,17 +12,6 @@ export const api = {
   }
 };
 
-export async function ensureSession(){
-  const key = 'sahayata.sid';
-  let sid = localStorage.getItem(key);
-  if(!sid){
-    const res = await api.get('/api/session');
-    sid = res.sessionId;
-    localStorage.setItem(key, sid);
-  }
-  return sid;
-}
-
 export function getUserId(){
   try {
     const userData = localStorage.getItem('user');

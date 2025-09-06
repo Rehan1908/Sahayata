@@ -13,6 +13,7 @@
       <nav class="primary-nav" aria-label="Primary">
         <a href="./guide.html" title="Personal Guide">Personal Guide</a>
         <a href="./samvad.html" title="Anonymous community">Samvad</a>
+        <a href="./abhyas.html" title="Resilience toolkit">Abhyas</a>
         <a href="./journeys.html" aria-current="page" title="Wellness journeys">Journeys</a>
         <a href="./professionals.html" title="Therapists">Professional Connect</a>
         <a href="./section-5.html" title="Why Sahayata works">Why us</a>
@@ -136,6 +137,7 @@ Listen to calming music for 15 minutes" rows="8"></textarea>
   <footer class="site-footer"><div class="container footer-inner"><p>© <span id="year"></span> Sahayata</p></div></footer>
   
   <!-- Script dependencies -->
+  <script src="../assets/js/particles.js"></script>
   <script src="../assets/js/main.js"></script>
   <script src="../assets/js/auth.js"></script>
   
@@ -356,18 +358,12 @@ Listen to calming music for 15 minutes" rows="8"></textarea>
         
         if (isAuthenticated) {
           userId = userIdFromAuth;
-          console.log('Authenticated user ID:', userId);
-        } else {
-          console.log('User not authenticated or no user ID found');
         }
         
         const res = await api.get(`/api/journeys?userId=${encodeURIComponent(userId || '')}`);
         allJourneys = Array.isArray(res.journeys) ? res.journeys : [];
         userProgress = res.progress || {};
         
-        console.log('Loaded journeys:', allJourneys.length, 'journeys');
-        console.log('Custom journeys:', allJourneys.filter(j => j.isCustom).length);
-        console.log('Core journeys:', allJourneys.filter(j => j.isCore).length);
       } catch (error) {
         console.error('Error loading journeys:', error);
         allJourneys = [];

@@ -64,11 +64,12 @@
   <footer class="site-footer"><div class="container footer-inner"><p>© <span id="year"></span> Sahayata</p></div></footer>
   
   <!-- Script dependencies -->
+  <script src="../assets/js/particles.js"></script>
   <script src="../assets/js/main.js"></script>
   <script src="../assets/js/auth.js"></script>
   
   <script type="module">
-    import { api, ensureSession } from '../assets/js/app.js';
+    import { api, getUserId } from '../assets/js/app.js';
     const root = document.getElementById('tools');
     const filter = document.getElementById('filter-type');
     let allTools = [];
@@ -135,8 +136,12 @@
         btn.textContent = 'Working...';
         
         try {
-          const sid = await ensureSession();
-          await api.post('/api/abhyas', { sessionId: sid, key });
+          const userId = getUserId();
+          if (!userId) {
+            console.log('No user ID available');
+            return;
+          }
+          await api.post('/api/abhyas', { sessionId: userId, key });
         } catch(e) {
           console.warn('API failed, but continuing:', e);
           // Continue anyway - the important thing is the user gets the tool

@@ -65,11 +65,12 @@
   <footer class="site-footer"><div class="container footer-inner"><p>© <span id="year"></span> Sahayata</p></div></footer>
   
   <!-- Script dependencies -->
+  <script src="../assets/js/particles.js"></script>
   <script src="../assets/js/main.js"></script>
   <script src="../assets/js/auth.js"></script>
   
   <script type="module">
-    import { api, ensureSession } from '../assets/js/app.js';
+    import { api, getUserId } from '../assets/js/app.js';
     
     const topicSel = document.getElementById('topic');
     const feed = document.getElementById('feed');
@@ -157,9 +158,13 @@
       submitBtn.textContent = 'Posting...';
       
       try {
-        const sid = await ensureSession();
+        const userId = getUserId();
+        if (!userId) {
+          feed.innerHTML = '<p class="empty-state">Please <a href="./auth.html">sign in</a> to participate in discussions.</p>';
+          return;
+        }
         await api.post('/api/samvad', { 
-          sessionId: sid, 
+          sessionId: userId, 
           topic: topicSel.value, 
           text: textValue 
         });

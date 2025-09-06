@@ -71,11 +71,12 @@
   <footer class="site-footer"><div class="container footer-inner"><p>© <span id="year"></span> Sahayata</p></div></footer>
   
   <!-- Script dependencies -->
+  <script src="../assets/js/particles.js"></script>
   <script src="../assets/js/main.js"></script>
   <script src="../assets/js/auth.js"></script>
   
   <script type="module">
-    import { api, ensureSession } from '../assets/js/app.js';
+    import { api, getUserId } from '../assets/js/app.js';
     const form = document.getElementById('qform');
     const recs = document.getElementById('recs');
     const msg = document.getElementById('msg');
@@ -84,9 +85,13 @@
       const mood = document.getElementById('mood').value;
       const area = document.getElementById('area').value;
       const pref = document.getElementById('pref').value;
-      const sid = await ensureSession();
+      const userId = getUserId();
+      if (!userId) {
+        recs.innerHTML = '<p class="empty-state">Please <a href="./auth.html">sign in</a> to get personalized recommendations.</p>';
+        return;
+      }
       // log a lightweight check-in
-      try{ await api.post('/api/notes', { mood, note:`guide:${area}/${pref}`, sessionId: sid }); }catch{}
+      try{ await api.post('/api/notes', { mood, note:`guide:${area}/${pref}`, sessionId: userId }); }catch{}
       const cards = buildRecs(mood, area, pref);
       recs.innerHTML = cards.map(renderCard).join('');
     });

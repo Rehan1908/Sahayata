@@ -1,3 +1,98 @@
+/* Falling Particles Background */
+.particles-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.particle {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  animation: fall linear infinite;
+  opacity: 0;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.25);
+}
+
+.particle:nth-child(odd) {
+  background: rgba(139, 213, 255, 0.18);
+  box-shadow: 0 0 12px rgba(139, 213, 255, 0.3);
+}
+
+.particle:nth-child(even) {
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+.particle:nth-child(3n) {
+  background: rgba(174, 226, 255, 0.16);
+  box-shadow: 0 0 10px rgba(174, 226, 255, 0.25);
+}
+
+.particle:nth-child(4n) {
+  background: rgba(200, 240, 255, 0.17);
+  box-shadow: 0 0 14px rgba(200, 240, 255, 0.22);
+}
+
+.particle:nth-child(5n) {
+  background: rgba(220, 250, 255, 0.12);
+  box-shadow: 0 0 8px rgba(220, 250, 255, 0.18);
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(-100px) rotate(0deg);
+    opacity: 0;
+  }
+  5% {
+    opacity: 0.5;
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  95% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(calc(100vh + 100px)) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateX(0) rotate(0deg);
+  }
+  25% {
+    transform: translateX(15px) rotate(90deg);
+  }
+  50% {
+    transform: translateX(-10px) rotate(180deg);
+  }
+  75% {
+    transform: translateX(8px) rotate(270deg);
+  }
+}
+
+.particle.floating {
+  animation: fall linear infinite, float ease-in-out infinite;
+  animation-duration: var(--fall-duration, 15s), var(--float-duration, 4s);
+}
+
+/* Ensure particles don't interfere with content */
+body {
+  position: relative;
+  z-index: 1;
+}
+
 /* Notification system */
 .notification {
   position: fixed;
