@@ -97,6 +97,11 @@
           btn.style.display = 'none';
         });
       }
+      
+      // Trigger auth state change event
+      window.dispatchEvent(new CustomEvent('authStateChanged', { 
+        detail: { isLoggedIn: this.isLoggedIn, user: this.user } 
+      }));
     },
     
     async login(email, password) {

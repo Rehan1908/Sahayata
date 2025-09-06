@@ -138,6 +138,7 @@ section{padding: 28px 0}
 
 /* Responsive, tidy card grid for "activities" */
 .grid-3{display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:16px}
+.grid-4{display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:16px}
 .grid{display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:16px}
 .card{display:block; padding:16px; background:var(--card); border:1px solid var(--ring); border-radius:14px; color:var(--text); text-decoration:none}
 .card:hover{outline:2px solid rgba(54,179,138,0.45)}
@@ -234,6 +235,7 @@ select option{
 
 @media (max-width: 860px){ 
   .grid-3{grid-template-columns:1fr} 
+  .grid-4{grid-template-columns:1fr} 
   .cta-inner{flex-direction:column; align-items:flex-start} 
   .stat-list{grid-template-columns:1fr}
   .cta-actions{width:100%}

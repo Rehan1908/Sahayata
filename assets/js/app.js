@@ -22,3 +22,16 @@ export async function ensureSession(){
   }
   return sid;
 }
+
+export function getUserId(){
+  try {
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      const user = JSON.parse(userData);
+      return user.id; // Return the actual user ID from auth
+    }
+  } catch (e) {
+    console.error('Error getting user ID:', e);
+  }
+  return null;
+}

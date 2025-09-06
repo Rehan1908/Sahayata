@@ -13,7 +13,6 @@
       <nav class="primary-nav" aria-label="Primary">
         <a href="./guide.html" title="Personal Guide">Personal Guide</a>
         <a href="./samvad.html" title="Anonymous community">Samvad</a>
-        <a href="./abhyas.html" title="Resilience toolkit">Abhyas</a>
         <a href="./journeys.html" aria-current="page" title="Wellness journeys">Journeys</a>
         <a href="./professionals.html" title="Therapists">Professional Connect</a>
         <a href="./section-5.html" title="Why Sahayata works">Why us</a>
@@ -29,10 +28,9 @@
   <main class="container">
     <section class="hero">
       <h1>Wellness Journeys</h1>
-      <p class="lead">Gentle programs that build resilience over time. Earn points and badges as you develop healthy habits through small daily actions.</p>
+  <p class="lead">Start with a few simple defaults or create your own. Only you can see your progress.</p>
       <div class="actions">
-        <button class="btn btn-primary" onclick="handleCreateJourney()" data-auth-required="create a journey">Create Custom Journey</button>
-        <button class="btn btn-ghost" onclick="loadDefaultJourneys()">Load Examples</button>
+  <button class="btn btn-primary" onclick="handleCreateJourney()" data-auth-required="create a journey">Create Custom Journey</button>
       </div>
     </section>
     
@@ -142,7 +140,7 @@ Listen to calming music for 15 minutes" rows="8"></textarea>
   <script src="../assets/js/auth.js"></script>
   
   <script type="module">
-    import { api, ensureSession } from '../assets/js/app.js';
+  import { api, getUserId } from '../assets/js/app.js';
     
     // Handle journey creation with auth check
     window.handleCreateJourney = function() {
@@ -159,162 +157,10 @@ Listen to calming music for 15 minutes" rows="8"></textarea>
     const totalPoints = document.getElementById('total-points');
     const activeJourneys = document.getElementById('active-journeys');
     const completedSteps = document.getElementById('completed-steps');
-    let userProgress = {};
-    let allJourneys = [];
+  let userProgress = {};
+  let allJourneys = [];
     
-    // Comprehensive default journeys with detailed activities
-    const defaultJourneys = [
-      {
-        key: 'exam-stress-relief',
-        title: '21-Day Exam Stress Relief',
-        steps: 21,
-        description: 'Master stress management techniques for exam success',
-        points: 420,
-        category: 'exam-prep',
-        activities: [
-          'Practice 10 minutes of deep breathing exercises',
-          'Create a realistic study schedule for the day',
-          'Take a 15-minute walk to clear your mind',
-          'Write down your biggest worry and one solution',
-          'Practice progressive muscle relaxation',
-          'Review study material using the Pomodoro technique',
-          'Listen to calming music for 20 minutes',
-          'Practice positive self-talk: "I am prepared and capable"',
-          'Do gentle stretching exercises',
-          'Organize your study space',
-          'Practice visualization of exam success',
-          'Take breaks every hour during study sessions',
-          'Call a friend or family member for support',
-          'Practice mindful eating during meals',
-          'Write down 3 things you learned today',
-          'Do 5 minutes of meditation before studying',
-          'Create flashcards for difficult topics',
-          'Take a relaxing bath or shower',
-          'Practice gratitude: write 3 things you\'re thankful for',
-          'Review your progress and celebrate small wins',
-          'Do a final relaxation session and trust your preparation'
-        ]
-      },
-      {
-        key: 'mindfulness-foundation',
-        title: '30-Day Mindfulness Foundation',
-        steps: 30,
-        description: 'Build a sustainable mindfulness practice for daily calm',
-        points: 600,
-        category: 'mindfulness',
-        activities: [
-          'Sit quietly and focus on your breath for 5 minutes',
-          'Practice mindful walking for 10 minutes',
-          'Do a body scan meditation',
-          'Practice mindful eating during one meal',
-          'Observe your thoughts without judgment for 5 minutes',
-          'Practice loving-kindness meditation',
-          'Focus on sounds around you for 10 minutes',
-          'Practice mindful stretching',
-          'Do a gratitude meditation',
-          'Practice the 4-7-8 breathing technique',
-          'Mindfully observe nature for 15 minutes',
-          'Practice the STOP technique when feeling stressed',
-          'Do a mindful morning routine',
-          'Practice evening reflection meditation',
-          'Focus on physical sensations mindfully',
-          'Practice mindful listening in conversations',
-          'Do a walking meditation in nature',
-          'Practice acceptance meditation',
-          'Mindfully engage in a creative activity',
-          'Practice compassion meditation',
-          'Do mindful journaling for 10 minutes',
-          'Practice the 5-4-3-2-1 grounding technique',
-          'Meditate on your values and goals',
-          'Practice mindful breathing during daily activities',
-          'Do a forgiveness meditation',
-          'Practice mindful technology use',
-          'Meditate on interconnectedness',
-          'Practice present moment awareness',
-          'Do a celebration and reflection meditation',
-          'Set intentions for continuing your practice'
-        ]
-      },
-      {
-        key: 'sleep-optimization',
-        title: '14-Day Sleep Optimization',
-        steps: 14,
-        description: 'Develop healthy sleep habits for better rest and energy',
-        points: 280,
-        category: 'sleep-hygiene',
-        activities: [
-          'Set a consistent bedtime and stick to it',
-          'Create a 30-minute wind-down routine',
-          'Avoid screens 1 hour before bedtime',
-          'Practice relaxation breathing in bed',
-          'Keep your bedroom cool and dark',
-          'Avoid caffeine after 2 PM',
-          'Do light stretching before bed',
-          'Write in a gratitude journal before sleep',
-          'Take a warm bath or shower',
-          'Practice progressive muscle relaxation',
-          'Read a calming book instead of using devices',
-          'Practice the 4-7-8 breathing technique',
-          'Reflect on your sleep quality and adjust habits',
-          'Plan your ideal sleep schedule for ongoing success'
-        ]
-      },
-      {
-        key: 'confidence-building',
-        title: '21-Day Confidence Building',
-        steps: 21,
-        description: 'Build unshakeable self-confidence and self-worth',
-        points: 420,
-        category: 'confidence',
-        activities: [
-          'Write down 5 things you like about yourself',
-          'Practice good posture for the entire day',
-          'Compliment someone genuinely',
-          'Try something slightly outside your comfort zone',
-          'Dress in a way that makes you feel confident',
-          'Practice positive affirmations in the mirror',
-          'Celebrate a small achievement from today',
-          'Share your opinion in a group conversation',
-          'Learn something new for 30 minutes',
-          'Help someone with something you\'re good at',
-          'Practice making eye contact in conversations',
-          'Write about a challenge you\'ve overcome',
-          'Take a selfie you feel good about',
-          'Practice saying "no" to something you don\'t want',
-          'Share a personal story with someone you trust',
-          'Practice walking with confidence',
-          'Write down your core values and strengths',
-          'Give yourself credit for progress made',
-          'Practice introducing yourself confidently',
-          'Reflect on your growth over these 21 days',
-          'Set three confidence goals for the future'
-        ]
-      },
-      {
-        key: 'social-connection',
-        title: '14-Day Social Connection Challenge',
-        steps: 14,
-        description: 'Build meaningful relationships and improve social skills',
-        points: 280,
-        category: 'social-skills',
-        activities: [
-          'Have a meaningful conversation with someone new',
-          'Reach out to an old friend you haven\'t spoken to',
-          'Practice active listening in all conversations',
-          'Give someone a genuine compliment',
-          'Join a group activity or club',
-          'Practice empathy by understanding someone\'s perspective',
-          'Share something personal with a trusted friend',
-          'Help someone without expecting anything in return',
-          'Practice small talk with acquaintances',
-          'Invite someone to do an activity together',
-          'Express gratitude to someone who helped you',
-          'Practice conflict resolution skills if needed',
-          'Participate in a group discussion',
-          'Reflect on your social connections and plan to nurture them'
-        ]
-      }
-    ];
+  // Removed default/example journeys: each user manages their own.
     
     // Form handling functions
     window.showCreateForm = function() {
@@ -327,40 +173,7 @@ Listen to calming music for 15 minutes" rows="8"></textarea>
       document.getElementById('journey-form').reset();
     };
     
-    window.loadDefaultJourneys = async function() {
-      const btn = event.target;
-      const originalText = btn.textContent;
-      
-      btn.disabled = true;
-      btn.textContent = 'Loading...';
-      
-      try {
-        // Save default journeys to database
-        const sid = await ensureSession();
-        let addedCount = 0;
-        
-        for (const journey of defaultJourneys) {
-          try {
-            await api.post('/api/journeys/create', { 
-              sessionId: sid, 
-              ...journey 
-            });
-            addedCount++;
-          } catch (error) {
-            console.warn('Failed to add journey:', journey.title, error.message);
-          }
-        }
-        
-        load();
-        showNotification(`Added ${addedCount} example journey(s) successfully!`, 'success');
-      } catch (error) {
-        console.error('Error loading default journeys:', error);
-        showNotification('Failed to load example journeys. Please try again.', 'error');
-      } finally {
-        btn.disabled = false;
-        btn.textContent = originalText;
-      }
-    };
+  // Removed: loadDefaultJourneys() — no global examples.
     
     // Notification system
     function showNotification(message, type = 'info') {
@@ -370,6 +183,16 @@ Listen to calming music for 15 minutes" rows="8"></textarea>
       
       const notification = document.createElement('div');
       notification.className = `notification notification-${type}`;
+      notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+        min-width: 300px;
+        opacity: 0;
+        transform: translateX(100%);
+        transition: all 0.3s ease;
+      `;
       notification.innerHTML = `
         <span>${message}</span>
         <button onclick="this.parentElement.remove()" aria-label="Close">&times;</button>
@@ -377,12 +200,21 @@ Listen to calming music for 15 minutes" rows="8"></textarea>
       
       document.body.appendChild(notification);
       
-      // Auto-remove after 5 seconds
+      // Animate in
+      setTimeout(() => {
+        notification.style.opacity = '1';
+        notification.style.transform = 'translateX(0)';
+      }, 100);
+      
+      // Auto-remove with longer time for success messages
+      const autoRemoveTime = type === 'success' ? 6000 : 5000;
       setTimeout(() => {
         if (notification.parentElement) {
-          notification.remove();
+          notification.style.opacity = '0';
+          notification.style.transform = 'translateX(100%)';
+          setTimeout(() => notification.remove(), 300);
         }
-      }, 5000);
+      }, autoRemoveTime);
     }
     
     // Duration selector handling
@@ -463,27 +295,26 @@ Listen to calming music for 15 minutes" rows="8"></textarea>
         }
         
         const journey = {
-          key: title.toLowerCase().replace(/[^a-z0-9]/g, '-'),
           title,
           description,
-          steps,
-          points: steps * 20,
-          category,
           activities: finalActivities,
-          custom: true
+          category
         };
         
-        const sid = await ensureSession();
-        await api.post('/api/journeys/create', { 
-          sessionId: sid, 
+        const userId = getUserId();
+        if (!userId) {
+          showNotification('Please sign in to create a journey', 'error');
+          return;
+        }
+        await api.post('/api/journeys', { 
+          userId, 
+          action: 'create',
           ...journey 
         });
         
         hideCreateForm();
-        load();
-        
-        // Show success message
-        showNotification('Custom journey created successfully!', 'success');
+        showNotification('Custom journey created successfully! 🎉', 'success');
+        setTimeout(() => load(), 1500); // Wait for notification then reload
         
       } catch (error) {
         console.error('Journey creation error:', error);
@@ -508,24 +339,49 @@ Listen to calming music for 15 minutes" rows="8"></textarea>
       }
     });
     
-    async function load(){
+  async function load(){
       try {
-        const res = await api.get('/api/journeys');
-        allJourneys = res.journeys && res.journeys.length ? res.journeys : [];
+        let userId = '';
         
-        // If no journeys exist, show some default ones
-        if (allJourneys.length === 0) {
-          allJourneys = defaultJourneys.slice(0, 2); // Show first 2 as examples
+        // Wait for auth to be initialized
+        let attempts = 0;
+        while (attempts < 10 && (!window.sahayataAuth || window.sahayataAuth.isLoggedIn === undefined)) {
+          await new Promise(resolve => setTimeout(resolve, 100));
+          attempts++;
         }
+        
+        // Check if user is authenticated and get their ID
+        const userIdFromAuth = getUserId();
+        const isAuthenticated = !!(window.sahayataAuth && window.sahayataAuth.isLoggedIn && userIdFromAuth);
+        
+        if (isAuthenticated) {
+          userId = userIdFromAuth;
+          console.log('Authenticated user ID:', userId);
+        } else {
+          console.log('User not authenticated or no user ID found');
+        }
+        
+        const res = await api.get(`/api/journeys?userId=${encodeURIComponent(userId || '')}`);
+        allJourneys = Array.isArray(res.journeys) ? res.journeys : [];
+        userProgress = res.progress || {};
+        
+        console.log('Loaded journeys:', allJourneys.length, 'journeys');
+        console.log('Custom journeys:', allJourneys.filter(j => j.isCustom).length);
+        console.log('Core journeys:', allJourneys.filter(j => j.isCore).length);
       } catch (error) {
         console.error('Error loading journeys:', error);
-        allJourneys = defaultJourneys.slice(0, 2);
+        allJourneys = [];
+        userProgress = {};
       }
       
+      render();
+    }
+    
+    function render() {
       // Calculate user stats
       let totalPts = 0, activeCount = 0, stepsCount = 0;
       allJourneys.forEach(j => {
-        const progress = userProgress[j.key] || 0;
+  const progress = userProgress[j.key] || 0;
         if(progress > 0){
           totalPts += Math.min(progress, j.steps) * (j.points / j.steps);
           if(progress < j.steps) activeCount++;
@@ -537,7 +393,23 @@ Listen to calming music for 15 minutes" rows="8"></textarea>
       activeJourneys.textContent = activeCount;
       completedSteps.textContent = stepsCount;
       
-      root.innerHTML = allJourneys.map(j => {
+      if (allJourneys.length === 0) {
+        root.innerHTML = `
+          <div class="card">
+            <h3>No journeys yet</h3>
+            <p class="lead" style="color:var(--muted)">Create your first journey to start tracking simple daily steps that help.</p>
+            <div class="actions"><button class="btn btn-primary" onclick="showCreateForm()">Create a journey</button></div>
+          </div>
+        `;
+        totalPoints.textContent = '0';
+        activeJourneys.textContent = '0';
+        completedSteps.textContent = '0';
+        return;
+    }
+
+    const canManage = !!(window.sahayataAuth && window.sahayataAuth.isLoggedIn);
+
+  root.innerHTML = allJourneys.map(j => {
         const progress = userProgress[j.key] || 0;
         const progressPercent = Math.round((progress / j.steps) * 100);
         const pointsEarned = Math.round((progress / j.steps) * j.points);
@@ -546,7 +418,7 @@ Listen to calming music for 15 minutes" rows="8"></textarea>
         return `<div class="card journey-card">
           <div class="journey-header">
             <h3>${j.title}</h3>
-            ${j.custom ? '<span class="custom-badge">Custom</span>' : ''}
+    ${j.isCustom ? '<span class="custom-badge">Custom</span>' : (j.isCore ? '<span class="category-badge">Core</span>' : '')}
             <span class="category-badge">${j.category || 'general'}</span>
           </div>
           <p>${j.description || ''}</p>
@@ -564,37 +436,82 @@ Listen to calming music for 15 minutes" rows="8"></textarea>
             <button class="btn btn-primary" data-key="${j.key}" ${progress >= j.steps ? 'disabled' : ''}>
               ${progress >= j.steps ? 'Completed ✓' : 'Complete Today\'s Step'}
             </button>
-            ${j.custom ? `<button class="btn btn-ghost btn-sm" onclick="deleteJourney('${j.key}')">Delete</button>` : ''}
+  ${canManage ? `<button class="btn btn-ghost btn-sm" onclick="deleteJourney('${j.key}')">Delete</button>` : ''}
           </div>
         </div>`;
       }).join('');
       
-      root.querySelectorAll('button[data-key]').forEach(btn=>btn.addEventListener('click', async ()=>{
+  root.querySelectorAll('button[data-key]').forEach(btn=>btn.addEventListener('click', async ()=>{
         const key = btn.dataset.key;
-        const sid = await ensureSession();
-        await api.post('/api/journeys', { sessionId: sid, journeyKey: key });
+        const userId = getUserId();
+        if (!userId) {
+          showNotification('Please sign in to track progress', 'error');
+          return;
+        }
+        await api.post('/api/journeys', { userId, journeyKey: key, action: 'progress' });
         
         // Update local progress
         userProgress[key] = (userProgress[key] || 0) + 1;
         
         btn.textContent = 'Great job! ✓';
-        setTimeout(() => load(), 1000);
+        showNotification('Step completed! Keep going! 🌟', 'success');
+        setTimeout(() => load(), 2000); // Show success message longer
       }));
     }
     
     window.deleteJourney = async function(key) {
-      if (confirm('Are you sure you want to delete this custom journey?')) {
+      const journey = allJourneys.find(j => j.key === key);
+      const journeyType = journey && journey.isCore ? 'core journey' : 'custom journey';
+      const actionText = journey && journey.isCore ? 'remove' : 'delete';
+      
+      if (confirm(`${actionText} this ${journeyType}? This will ${journey && journey.isCore ? 'remove it from your view and clear' : 'delete it and clear'} your progress.`)) {
         try {
-          const sid = await ensureSession();
-          await api.post('/api/journeys/delete', { sessionId: sid, journeyKey: key });
-          load();
+          const userId = getUserId();
+          if (!userId) {
+            showNotification('Please sign in to manage journeys', 'error');
+            window.sahayataAuth && window.sahayataAuth.requireAuth('manage journeys');
+            return;
+          }
+          
+          // Immediately remove from local list for better UX
+          allJourneys = allJourneys.filter(j => j.key !== key);
+          
+          // Reset progress locally
+          userProgress[key] = 0;
+          
+          // Re-render immediately
+          render();
+          
+          const result = await api.post('/api/journeys', { userId, journeyKey: key, action: 'delete' });
+          
+          const message = result.isCore ? 'Core journey removed from your view' : 'Custom journey deleted successfully';
+          showNotification(message, 'success');
+          
+          // Reload after a shorter delay to sync with server
+          setTimeout(() => load(), 800);
         } catch (error) {
-          alert('Error deleting journey: ' + error.message);
+          console.error('Delete error:', error);
+          showNotification('Error managing journey: ' + error.message, 'error');
+          // Reload to restore correct state if operation failed
+          setTimeout(() => load(), 500);
         }
       }
     };
     
-    load();
+    // Initialize when page loads and auth is ready
+    document.addEventListener('DOMContentLoaded', function() {
+      // Wait a bit for auth to initialize, then load
+      setTimeout(() => {
+        load();
+      }, 200);
+    });
+    
+    // Also load when auth state changes
+    window.addEventListener('authStateChanged', function() {
+      setTimeout(() => {
+        load();
+      }, 100);
+    });
   </script>
 </body>
 </html>
