@@ -120,6 +120,69 @@ async function handle(req, res){
     }catch(e){ return json(res, 200, { ok:true, direct:{ enabled: hasUri, error: e.message } }); }
   }
 
+  // Route API calls to their respective handlers
+  if(req.url.startsWith('/api/')){
+    try {
+      const apiPath = req.url.split('/api/')[1].split('?')[0];
+      const apiFile = path.join(__dirname, '..', 'api', `${apiPath}.js`);
+      
+      if(fs.existsSync(apiFile)){
+        const handler = require(apiFile);
+        
+        // Parse query parameters
+        const url = new URL(req.url, 'http://localhost');
+        req.query = Object.fromEntries(url.searchParams);
+        
+        // Read body for POST requests
+        if(req.method === 'POST' || req.method === 'PUT'){
+          req.body = await readBody(req);
+        }
+        
+        // Create Express.js-style response wrapper
+        const resWrapper = {
+          status: (code) => ({
+            json: (data) => json(res, code, data),
+            send: (data) => json(res, code, data)
+          }),
+          json: (data) => json(res, 200, data)
+        };
+        
+        return await handler(req, resWrapper);
+      }
+    } catch(e) {
+      console.error('API Error:', e);
+      return json(res, 500, { ok: false, error: e.message });
+    }
+  }
+
+  // Serve static files
+  if(req.method === 'GET'){
+    try{
+      let filePath = req.url === '/' ? '/index.html' : req.url;
+      filePath = path.join(__dirname, '..', filePath);
+      
+      if(fs.existsSync(filePath) && fs.statSync(filePath).isFile()){
+        const ext = path.extname(filePath);
+        const contentType = {
+          '.html': 'text/html',
+          '.css': 'text/css',
+          '.js': 'application/javascript',
+          '.json': 'application/json',
+          '.png': 'image/png',
+          '.jpg': 'image/jpeg',
+          '.gif': 'image/gif',
+          '.svg': 'image/svg+xml'
+        }[ext] || 'text/plain';
+        
+        res.writeHead(200, { 'Content-Type': contentType });
+        return fs.createReadStream(filePath).pipe(res);
+      }
+    }catch(e){
+      console.error('Static file error:', e);
+    }
+  }
+
+  // Legacy notes endpoint (keep for backwards compatibility)
   if(req.url === '/api/notes' && req.method === 'POST'){
     try{
       const body = await readBody(req);

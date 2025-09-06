@@ -3,16 +3,19 @@
   "version": "1.0.0",
   "private": true,
   "type": "commonjs",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "node backend/server.js",
+    "dev:server": "node backend/server.js",
+    "dev:seed": "node backend/seed.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "dependencies": {
+    "dotenv": "^16.4.5",
     "mongodb": "^6.8.0"
   },
-  "description": "A simple, trustworthy multi‑page site with a minimal Node backend (no packages) that talks to MongoDB Atlas via the Data API.",
-  "main": "index.js",
-  "scripts": {
-  "dev:server": "node backend/server.js",
-  "dev:seed": "node backend/seed.js",
-  "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
+  "description": "A comprehensive mental health platform for Indian college students",
+  "author": "Rehan1908",
   "license": "ISC"
 }

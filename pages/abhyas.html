@@ -10,18 +10,50 @@
   <header class="site-header">
     <div class="container header-inner">
       <a class="brand" href="../index.html"><span class="brand-mark">✦</span><span class="brand-text">Sahayata</span></a>
-      <nav class="primary-nav">
-        <a href="./samvad.html">Samvad</a>
-        <a href="./abhyas.html" aria-current="page">Abhyas</a>
-        <a href="./journeys.html">Journeys</a>
-        <a href="./professionals.html">Professionals</a>
+      <nav class="primary-nav" aria-label="Primary">
+        <a href="./guide-enhanced.html" title="Personal Guide">Personal Guide</a>
+        <a href="./samvad.html" title="Anonymous community">Samvad</a>
+        <a href="./abhyas.html" aria-current="page" title="Resilience toolkit">Abhyas</a>
+        <a href="./journeys.html" title="Wellness journeys">Journeys</a>
+        <a href="./professionals.html" title="Therapists">Professional Connect</a>
+  <a href="./section-5.html" title="Why Sahayata works">Why us</a>
+        <a class="nav-cta" href="tel:18005990019" aria-label="Aapatkal – Call Tele MANAS 24 by 7">Aapatkal</a>
       </nav>
     </div>
   </header>
   <main class="container">
-    <section class="hero"><h1>Abhyas Toolkit</h1><p class="lead">Evidence‑based practices you can do today.</p></section>
+    <section class="hero">
+      <h1>Abhyas Toolkit</h1>
+      <p class="lead">Evidence‑based practices to build real, lasting coping skills. Interactive tools for mindfulness, thought work, and resilience.</p>
+    </section>
+    
+    <section>
+      <div class="narrow">
+        <div class="cta-inner">
+          <div class="cta-text">
+            <h2>Choose by how you're feeling</h2>
+            <p>Pick tools that match what you need right now.</p>
+          </div>
+          <div class="cta-actions">
+            <select id="filter-type">
+              <option value="">All tools</option>
+              <option value="meditation">Meditations</option>
+              <option value="guide">Guides</option>
+              <option value="journal">Journaling</option>
+              <option value="exercise">Exercises</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section>
       <div id="tools" class="grid"></div>
+    </section>
+
+    <section class="narrow about">
+      <h2>About these practices</h2>
+      <p>Each tool is based on proven therapeutic techniques adapted specifically for student life. These aren't just articles—they're active exercises designed to build skills you can use immediately and for life.</p>
     </section>
   </main>
   <footer class="site-footer"><div class="container footer-inner"><p>© <span id="year"></span> Sahayata</p></div></footer>
@@ -29,15 +61,118 @@
     import { api, ensureSession } from '../assets/js/app.js';
     import '../assets/js/main.js';
     const root = document.getElementById('tools');
+    const filter = document.getElementById('filter-type');
+    let allTools = [];
+    
     async function load(){
-      const res = await api.get('/api/abhyas');
-      root.innerHTML = (res.tools||[]).map(t=>`<div class="card"><h3>${t.title}</h3><p>${t.type} • ${t.minutes} min</p><button class="btn" data-key="${t.key}">Do it</button></div>`).join('');
-      root.querySelectorAll('button[data-key]').forEach(btn=>btn.addEventListener('click', async () => {
-        const sid = await ensureSession();
-        await api.post('/api/abhyas', { sessionId: sid, key: btn.dataset.key });
-        btn.textContent='Logged ✓';
-      }));
+      try {
+        const res = await api.get('/api/abhyas');
+        allTools = res.tools || getDefaultTools();
+      } catch(e) {
+        console.warn('API failed, using default tools:', e);
+        allTools = getDefaultTools();
+      }
+      renderTools(allTools);
     }
+    
+    function getDefaultTools() {
+      return [
+        { key:'breathing', title:'Guided breathing meditation', type:'meditation', minutes:2, description:'Calm your racing mind with gentle breath awareness' },
+        { key:'quick-relaxation', title:'Why you should relax', type:'meditation', minutes:1, description:'Quick reminder on the importance of taking breaks' },
+        { key:'thought-diary', title:'Interactive thought diary', type:'journal', minutes:5, description:'Clear your head by writing down what\'s bothering you' },
+        { key:'mindful-study', title:'Mindful studying technique', type:'guide', minutes:5, description:'Study with focus and less anxiety' },
+        { key:'exam-anxiety', title:'Managing exam anxiety', type:'guide', minutes:7, description:'Practical steps to handle exam stress' },
+        { key:'placement-stress', title:'Coping with placement pressure', type:'guide', minutes:6, description:'Navigate job search anxiety with confidence' },
+        { key:'sleep-hygiene', title:'Better sleep habits', type:'guide', minutes:4, description:'Step-by-step guide to quality rest' },
+        { key:'time-management', title:'Time management for students', type:'guide', minutes:8, description:'Organize your day to reduce overwhelm' },
+        { key:'gratitude-practice', title:'Daily gratitude exercise', type:'exercise', minutes:3, description:'Build positivity with simple appreciation' },
+        { key:'hostel-loneliness', title:'Dealing with hostel loneliness', type:'guide', minutes:6, description:'Connect with others and feel less isolated' },
+        { key:'parental-pressure', title:'Managing parental expectations', type:'guide', minutes:5, description:'Navigate family pressure with healthy boundaries' }
+      ];
+    }
+    
+    function getToolAction(key) {
+      const actions = {
+        'breathing': 'https://www.youtube.com/watch?v=YRPh_GaiL8s', // 2-minute breathing meditation
+        'quick-relaxation': 'https://youtube.com/shorts/IYHri3xTKvA?si=KhKTrHb4FBpb22c0', // Quick relaxation reminder
+        'thought-diary': 'https://docs.google.com/document/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit', // Template for thought diary
+        'mindful-study': 'https://www.youtube.com/watch?v=_tpB-B8BXk0', // Mindful study techniques
+        'exam-anxiety': 'https://www.headspace.com/meditation/anxiety', // Exam anxiety resources
+        'placement-stress': 'https://www.mindtools.com/pages/article/newTCS_01.htm', // Career stress management
+        'sleep-hygiene': 'https://www.sleepfoundation.org/how-sleep-works/sleep-hygiene-tips', // Sleep hygiene guide
+        'time-management': 'https://www.mindtools.com/pages/main/newMN_HTE.htm', // Time management
+        'gratitude-practice': 'https://ggia.berkeley.edu/practice/gratitude_journal', // Gratitude practice
+        'hostel-loneliness': 'https://www.7cups.com/', // Emotional support
+        'parental-pressure': 'https://childmind.org/article/managing-parental-expectations/'
+      };
+      return actions[key];
+    }
+    
+    function renderTools(tools){
+      root.innerHTML = tools.map(t=>
+        `<div class="card" id="${t.key}">
+          <h3>${t.title}</h3>
+          <p>${t.description || ''}</p>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px">
+            <small style="color:var(--muted)">${t.type} • ${t.minutes} min</small>
+            <button class="btn btn-primary" data-key="${t.key}">Do it</button>
+          </div>
+        </div>`
+      ).join('');
+      
+      root.querySelectorAll('button[data-key]').forEach(btn=>btn.addEventListener('click', async () => {
+        const key = btn.dataset.key;
+        btn.disabled = true;
+        btn.textContent = 'Working...';
+        
+        try {
+          const sid = await ensureSession();
+          await api.post('/api/abhyas', { sessionId: sid, key });
+        } catch(e) {
+          console.warn('API failed, but continuing:', e);
+          // Continue anyway - the important thing is the user gets the tool
+        }
+        
+        btn.textContent='Completed ✓';
+        btn.style.background = 'var(--brand-2)';
+        
+        // Show brief encouragement
+        const card = btn.closest('.card');
+        const encouragement = document.createElement('small');
+        encouragement.textContent = '🌟 Great work! This practice builds over time.';
+        encouragement.style.color = 'var(--brand-2)';
+        encouragement.style.display = 'block';
+        encouragement.style.marginTop = '8px';
+        encouragement.style.fontWeight = '600';
+        card.appendChild(encouragement);
+        
+        // Simulate opening the tool (you could link to actual tool pages)
+        setTimeout(() => {
+          const toolAction = getToolAction(key);
+          if(toolAction) {
+            window.open(toolAction, '_blank');
+          }
+        }, 500);
+      }));
+      
+      // Handle URL hash highlighting
+      if(location.hash){
+        const id = location.hash.slice(1);
+        const el = document.getElementById(id);
+        if(el){
+          el.classList.add('highlight');
+          el.scrollIntoView({ behavior:'smooth', block:'start' });
+          setTimeout(()=> el.classList.remove('highlight'), 2200);
+        }
+      }
+    }
+    
+    filter.addEventListener('change', () => {
+      const type = filter.value;
+      const filtered = type ? allTools.filter(t => t.type === type) : allTools;
+      renderTools(filtered);
+    });
+    
     load();
   </script>
 </body>

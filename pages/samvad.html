@@ -10,11 +10,14 @@
   <header class="site-header">
     <div class="container header-inner">
       <a class="brand" href="../index.html"><span class="brand-mark">✦</span><span class="brand-text">Sahayata</span></a>
-      <nav class="primary-nav">
-        <a href="./samvad.html" aria-current="page">Samvad</a>
-        <a href="./abhyas.html">Abhyas</a>
-        <a href="./journeys.html">Journeys</a>
-        <a href="./professionals.html">Professionals</a>
+      <nav class="primary-nav" aria-label="Primary">
+        <a href="./guide-enhanced.html" title="Personal Guide">Personal Guide</a>
+        <a href="./samvad.html" aria-current="page" title="Anonymous community">Samvad</a>
+        <a href="./abhyas.html" title="Resilience toolkit">Abhyas</a>
+        <a href="./journeys.html" title="Wellness journeys">Journeys</a>
+        <a href="./professionals.html" title="Therapists">Professional Connect</a>
+        <a href="./section-5.html" title="Why Sahayata works">Why us</a>
+        <a class="nav-cta" href="tel:18005990019" aria-label="Aapatkal – Call Tele MANAS 24 by 7">Aapatkal</a>
       </nav>
     </div>
   </header>
@@ -23,21 +26,33 @@
       <h1>Samvad Hub</h1>
       <p class="lead">Anonymous student‑only conversations. Be kind. No PII.</p>
     </section>
+    
     <section>
       <div class="narrow">
         <label>Topic
           <select id="topic">
-            <option value="general">General</option>
+            <option value="general">General Support</option>
             <option value="exam">Exam Stress</option>
-            <option value="career">Career Fear</option>
+            <option value="career">Career Fear & Placements</option>
             <option value="hostel">Hostel Loneliness</option>
+            <option value="family">Parental Expectations</option>
+            <option value="academic">Academic Pressure</option>
+            <option value="social">Social Anxiety</option>
           </select>
         </label>
-        <div id="feed" class="card-list" style="margin:1rem 0"></div>
+
+        <div id="feed" style="margin:20px 0; display:grid; gap:12px"></div>
+        
         <form id="post-form" class="card">
-          <textarea id="post-text" rows="3" placeholder="Share what’s on your mind…"></textarea>
-          <button class="btn" type="submit">Post anonymously</button>
-          <small id="post-msg"></small>
+          <h3 style="margin:0 0 8px">Share anonymously</h3>
+          <textarea id="post-text" rows="3" placeholder="What's on your mind? Keep it anonymous and be kind." maxlength="2000"></textarea>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px">
+            <small style="color:var(--muted)"><span id="char-count">0</span>/2000 characters</small>
+            <div>
+              <button type="submit" class="btn btn-primary">Post anonymously</button>
+              <small id="post-msg" style="margin-left:10px"></small>
+            </div>
+          </div>
         </form>
       </div>
     </section>
@@ -46,25 +61,134 @@
   <script type="module">
     import { api, ensureSession } from '../assets/js/app.js';
     import '../assets/js/main.js';
+    
     const topicSel = document.getElementById('topic');
     const feed = document.getElementById('feed');
     const form = document.getElementById('post-form');
     const text = document.getElementById('post-text');
     const msg = document.getElementById('post-msg');
-    async function load(){
-      const t = topicSel.value;
-      const res = await api.get(`/api/samvad?topic=${encodeURIComponent(t)}`);
-      feed.innerHTML = (res.documents||[]).map(d=>`<div class="card"><p>${escapeHtml(d.text)}</p><small>${new Date(d.createdAt).toLocaleString()}</small></div>`).join('') || '<p>No posts yet.</p>';
-    }
-    topicSel.addEventListener('change', load);
-    form.addEventListener('submit', async e=>{
-      e.preventDefault(); msg.textContent='';
-      const t = text.value.trim(); if(!t) return;
-      const sid = await ensureSession();
-      await api.post('/api/samvad', { sessionId: sid, topic: topicSel.value, text: t });
-      text.value=''; msg.textContent='Posted.'; await load();
+    const charCount = document.getElementById('char-count');
+    
+    // Character counter with auto-save draft
+    text.addEventListener('input', () => {
+      const count = text.value.length;
+      charCount.textContent = count;
+      charCount.style.color = count > 1800 ? 'var(--danger)' : count > 1500 ? 'orange' : 'var(--muted)';
+      
+      // Auto-save draft
+      if (count > 0) {
+        localStorage.setItem('samvad_draft', text.value);
+      } else {
+        localStorage.removeItem('samvad_draft');
+      }
     });
-    function escapeHtml(s){ return s.replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+    
+    // Load saved draft
+    const savedDraft = localStorage.getItem('samvad_draft');
+    if (savedDraft) {
+      text.value = savedDraft;
+      charCount.textContent = savedDraft.length;
+    }
+    
+    async function load(){
+      try {
+        const t = topicSel.value;
+        const res = await api.get(`/api/samvad?topic=${encodeURIComponent(t)}`);
+        const posts = res.documents || [];
+        
+        feed.innerHTML = posts.length ? posts.map(d =>
+          `<div class="card">
+            <p>${escapeHtml(d.text)}</p>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px">
+              <small style="color:var(--muted)">${new Date(d.createdAt).toLocaleString()}</small>
+              <small style="color:var(--brand-2)">#${d.topic || 'general'}</small>
+            </div>
+          </div>`
+        ).join('') : `<div class="card" style="text-align:center; color:var(--muted)">
+          <p>No posts in this topic yet. Be the first to share!</p>
+        </div>`;
+      } catch(e) {
+        console.warn('Failed to load posts:', e);
+        feed.innerHTML = `<div class="card" style="text-align:center; color:var(--muted)">
+          <p>Welcome to ${topicSel.options[topicSel.selectedIndex].text}</p>
+          <p>Share your thoughts anonymously below.</p>
+        </div>`;
+      }
+    }
+    
+    topicSel.addEventListener('change', load);
+    
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      msg.textContent = '';
+      
+      const textValue = text.value.trim();
+      if(!textValue) {
+        msg.textContent = 'Please write something to share.';
+        msg.style.color = 'var(--danger)';
+        return;
+      }
+      
+      if(textValue.length > 2000) {
+        msg.textContent = 'Message is too long. Please keep it under 2000 characters.';
+        msg.style.color = 'var(--danger)';
+        return;
+      }
+      
+      // Disable button during submission
+      const submitBtn = form.querySelector('button[type="submit"]');
+      const originalText = submitBtn.textContent;
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Posting...';
+      
+      try {
+        const sid = await ensureSession();
+        await api.post('/api/samvad', { 
+          sessionId: sid, 
+          topic: topicSel.value, 
+          text: textValue 
+        });
+        
+        text.value = '';
+        charCount.textContent = '0';
+        localStorage.removeItem('samvad_draft'); // Clear saved draft
+        msg.textContent = 'Posted anonymously ✓';
+        msg.style.color = 'var(--brand-2)';
+        
+        setTimeout(() => msg.textContent = '', 3000);
+        await load();
+      } catch(e) {
+        console.error('Failed to post:', e);
+        let errorMessage = 'Failed to post. Try again.';
+        
+        // Handle specific error codes
+        if (e.message.includes('429')) {
+          errorMessage = 'You\'re posting too quickly. Please wait a moment before posting again.';
+        } else if (e.message.includes('409')) {
+          errorMessage = 'You just posted this same message. Please wait before posting it again.';
+        } else if (e.message.includes('400')) {
+          errorMessage = 'Invalid message content. Please check your message and try again.';
+        }
+        
+        msg.textContent = errorMessage;
+        msg.style.color = 'var(--danger)';
+      } finally {
+        // Re-enable button
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+      }
+    });
+    
+    function escapeHtml(s) { 
+      return s.replace(/[&<>"']/g, c => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[c]));
+    }
+    
     load();
   </script>
 </body>

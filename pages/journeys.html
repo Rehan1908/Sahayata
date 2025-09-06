@@ -10,36 +10,563 @@
   <header class="site-header">
     <div class="container header-inner">
       <a class="brand" href="../index.html"><span class="brand-mark">✦</span><span class="brand-text">Sahayata</span></a>
-      <nav class="primary-nav">
-        <a href="./samvad.html">Samvad</a>
-        <a href="./abhyas.html">Abhyas</a>
-        <a href="./journeys.html" aria-current="page">Journeys</a>
-        <a href="./professionals.html">Professionals</a>
+      <nav class="primary-nav" aria-label="Primary">
+        <a href="./guide-enhanced.html" title="Personal Guide">Personal Guide</a>
+        <a href="./samvad.html" title="Anonymous community">Samvad</a>
+        <a href="./abhyas.html" title="Resilience toolkit">Abhyas</a>
+        <a href="./journeys.html" aria-current="page" title="Wellness journeys">Journeys</a>
+        <a href="./professionals.html" title="Therapists">Professional Connect</a>
+  <a href="./section-5.html" title="Why Sahayata works">Why us</a>
+        <a class="nav-cta" href="tel:18005990019" aria-label="Aapatkal – Call Tele MANAS 24 by 7">Aapatkal</a>
       </nav>
     </div>
   </header>
   <main class="container">
-    <section class="hero"><h1>Wellness Journeys</h1><p class="lead">Gentle programs that build resilience over time.</p></section>
-    <section><div id="list" class="grid"></div></section>
+    <section class="hero">
+      <h1>Wellness Journeys</h1>
+      <p class="lead">Gentle programs that build resilience over time. Earn points and badges as you develop healthy habits through small daily actions.</p>
+      <div class="actions">
+        <button class="btn btn-primary" onclick="showCreateForm()">Create Custom Journey</button>
+        <button class="btn btn-ghost" onclick="loadDefaultJourneys()">Load Examples</button>
+      </div>
+    </section>
+    
+    <section class="narrow">
+      <div class="hero-card">
+        <h3>Your Progress</h3>
+        <ul class="stat-list">
+          <li><span class="stat" id="total-points">0</span><span class="label">points earned</span></li>
+          <li><span class="stat" id="active-journeys">0</span><span class="label">active journeys</span></li>
+          <li><span class="stat" id="completed-steps">0</span><span class="label">steps completed</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Custom Journey Creation Form -->
+    <section id="create-form" class="narrow" style="display: none;">
+      <div class="card">
+        <h2>Create Custom Journey</h2>
+        <form id="journey-form">
+          <div class="form-group">
+            <label for="journey-title">Journey Title</label>
+            <input type="text" id="journey-title" placeholder="e.g., My Exam Stress Relief Journey" required>
+          </div>
+          <div class="form-group">
+            <label for="journey-description">Description</label>
+            <textarea id="journey-description" placeholder="What will this journey help you achieve?" rows="3"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="journey-duration">Duration (days)</label>
+            <select id="journey-duration">
+              <option value="7">7 days</option>
+              <option value="14">14 days</option>
+              <option value="21">21 days</option>
+              <option value="30" selected>30 days</option>
+              <option value="custom">Custom</option>
+            </select>
+          </div>
+          <div class="form-group" id="custom-duration" style="display: none;">
+            <label for="custom-days">Custom Duration (days)</label>
+            <input type="number" id="custom-days" min="1" max="365" placeholder="Enter number of days">
+          </div>
+          <div class="form-group">
+            <label for="journey-category">Category</label>
+            <select id="journey-category">
+              <option value="stress-management">Stress Management</option>
+              <option value="exam-prep">Exam Preparation</option>
+              <option value="sleep-hygiene">Sleep Hygiene</option>
+              <option value="mindfulness">Mindfulness & Meditation</option>
+              <option value="social-skills">Social Skills</option>
+              <option value="productivity">Productivity</option>
+              <option value="self-care">Self-Care</option>
+              <option value="physical-wellness">Physical Wellness</option>
+              <option value="emotional-regulation">Emotional Regulation</option>
+              <option value="confidence">Confidence Building</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Daily Activities (one per line)</label>
+            <textarea id="journey-activities" placeholder="Enter activities, one per line:
+Practice 5 minutes of deep breathing
+Write down 3 things you're grateful for
+Take a 10-minute walk
+Listen to calming music for 15 minutes" rows="8"></textarea>
+            <small style="color: var(--muted);">Each line will become a daily step in your journey</small>
+          </div>
+          <div class="actions">
+            <button type="submit" class="btn btn-primary">Create Journey</button>
+            <button type="button" class="btn btn-ghost" onclick="hideCreateForm()">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </section>
+    
+    <section>
+      <div id="list" class="grid"></div>
+    </section>
+    
+    <section class="narrow about">
+      <h2>How journeys work</h2>
+      <p>Each journey is designed around evidence-based practices broken into small, manageable daily steps. Complete steps to earn points and build lasting habits. The gentle gamification makes self-care feel rewarding rather than overwhelming.</p>
+      
+      <h3>Journey Categories</h3>
+      <div class="category-grid">
+        <div class="category-card">
+          <h4>🧘 Mindfulness</h4>
+          <p>Build awareness, reduce anxiety, and improve focus through meditation and breathing exercises.</p>
+        </div>
+        <div class="category-card">
+          <h4>📚 Exam Prep</h4>
+          <p>Develop healthy study habits, manage exam stress, and build confidence for academic success.</p>
+        </div>
+        <div class="category-card">
+          <h4>💪 Stress Management</h4>
+          <p>Learn techniques to cope with pressure, build resilience, and maintain emotional balance.</p>
+        </div>
+        <div class="category-card">
+          <h4>😴 Sleep Hygiene</h4>
+          <p>Establish healthy sleep patterns for better rest, improved mood, and enhanced cognitive function.</p>
+        </div>
+      </div>
+    </section>
   </main>
   <footer class="site-footer"><div class="container footer-inner"><p>© <span id="year"></span> Sahayata</p></div></footer>
   <script type="module">
     import { api, ensureSession } from '../assets/js/app.js';
     import '../assets/js/main.js';
     const root = document.getElementById('list');
-    async function load(){
-      const res = await api.get('/api/journeys');
-      const items = res.journeys && res.journeys.length ? res.journeys : [
-        { key:'resilience-14', title:'14‑Day Resilience', steps:14 },
-        { key:'mindfulness-30', title:'30‑Day Mindfulness', steps:30 },
-      ];
-      root.innerHTML = items.map(j=>`<div class="card"><h3>${j.title}</h3><p>${j.steps||14} steps</p><button class="btn" data-key="${j.key}">Mark next step</button></div>`).join('');
-      root.querySelectorAll('button[data-key]').forEach(btn=>btn.addEventListener('click', async ()=>{
+    const totalPoints = document.getElementById('total-points');
+    const activeJourneys = document.getElementById('active-journeys');
+    const completedSteps = document.getElementById('completed-steps');
+    let userProgress = {};
+    let allJourneys = [];
+    
+    // Comprehensive default journeys with detailed activities
+    const defaultJourneys = [
+      {
+        key: 'exam-stress-relief',
+        title: '21-Day Exam Stress Relief',
+        steps: 21,
+        description: 'Master stress management techniques for exam success',
+        points: 420,
+        category: 'exam-prep',
+        activities: [
+          'Practice 10 minutes of deep breathing exercises',
+          'Create a realistic study schedule for the day',
+          'Take a 15-minute walk to clear your mind',
+          'Write down your biggest worry and one solution',
+          'Practice progressive muscle relaxation',
+          'Review study material using the Pomodoro technique',
+          'Listen to calming music for 20 minutes',
+          'Practice positive self-talk: "I am prepared and capable"',
+          'Do gentle stretching exercises',
+          'Organize your study space',
+          'Practice visualization of exam success',
+          'Take breaks every hour during study sessions',
+          'Call a friend or family member for support',
+          'Practice mindful eating during meals',
+          'Write down 3 things you learned today',
+          'Do 5 minutes of meditation before studying',
+          'Create flashcards for difficult topics',
+          'Take a relaxing bath or shower',
+          'Practice gratitude: write 3 things you\'re thankful for',
+          'Review your progress and celebrate small wins',
+          'Do a final relaxation session and trust your preparation'
+        ]
+      },
+      {
+        key: 'mindfulness-foundation',
+        title: '30-Day Mindfulness Foundation',
+        steps: 30,
+        description: 'Build a sustainable mindfulness practice for daily calm',
+        points: 600,
+        category: 'mindfulness',
+        activities: [
+          'Sit quietly and focus on your breath for 5 minutes',
+          'Practice mindful walking for 10 minutes',
+          'Do a body scan meditation',
+          'Practice mindful eating during one meal',
+          'Observe your thoughts without judgment for 5 minutes',
+          'Practice loving-kindness meditation',
+          'Focus on sounds around you for 10 minutes',
+          'Practice mindful stretching',
+          'Do a gratitude meditation',
+          'Practice the 4-7-8 breathing technique',
+          'Mindfully observe nature for 15 minutes',
+          'Practice the STOP technique when feeling stressed',
+          'Do a mindful morning routine',
+          'Practice evening reflection meditation',
+          'Focus on physical sensations mindfully',
+          'Practice mindful listening in conversations',
+          'Do a walking meditation in nature',
+          'Practice acceptance meditation',
+          'Mindfully engage in a creative activity',
+          'Practice compassion meditation',
+          'Do mindful journaling for 10 minutes',
+          'Practice the 5-4-3-2-1 grounding technique',
+          'Meditate on your values and goals',
+          'Practice mindful breathing during daily activities',
+          'Do a forgiveness meditation',
+          'Practice mindful technology use',
+          'Meditate on interconnectedness',
+          'Practice present moment awareness',
+          'Do a celebration and reflection meditation',
+          'Set intentions for continuing your practice'
+        ]
+      },
+      {
+        key: 'sleep-optimization',
+        title: '14-Day Sleep Optimization',
+        steps: 14,
+        description: 'Develop healthy sleep habits for better rest and energy',
+        points: 280,
+        category: 'sleep-hygiene',
+        activities: [
+          'Set a consistent bedtime and stick to it',
+          'Create a 30-minute wind-down routine',
+          'Avoid screens 1 hour before bedtime',
+          'Practice relaxation breathing in bed',
+          'Keep your bedroom cool and dark',
+          'Avoid caffeine after 2 PM',
+          'Do light stretching before bed',
+          'Write in a gratitude journal before sleep',
+          'Take a warm bath or shower',
+          'Practice progressive muscle relaxation',
+          'Read a calming book instead of using devices',
+          'Practice the 4-7-8 breathing technique',
+          'Reflect on your sleep quality and adjust habits',
+          'Plan your ideal sleep schedule for ongoing success'
+        ]
+      },
+      {
+        key: 'confidence-building',
+        title: '21-Day Confidence Building',
+        steps: 21,
+        description: 'Build unshakeable self-confidence and self-worth',
+        points: 420,
+        category: 'confidence',
+        activities: [
+          'Write down 5 things you like about yourself',
+          'Practice good posture for the entire day',
+          'Compliment someone genuinely',
+          'Try something slightly outside your comfort zone',
+          'Dress in a way that makes you feel confident',
+          'Practice positive affirmations in the mirror',
+          'Celebrate a small achievement from today',
+          'Share your opinion in a group conversation',
+          'Learn something new for 30 minutes',
+          'Help someone with something you\'re good at',
+          'Practice making eye contact in conversations',
+          'Write about a challenge you\'ve overcome',
+          'Take a selfie you feel good about',
+          'Practice saying "no" to something you don\'t want',
+          'Share a personal story with someone you trust',
+          'Practice walking with confidence',
+          'Write down your core values and strengths',
+          'Give yourself credit for progress made',
+          'Practice introducing yourself confidently',
+          'Reflect on your growth over these 21 days',
+          'Set three confidence goals for the future'
+        ]
+      },
+      {
+        key: 'social-connection',
+        title: '14-Day Social Connection Challenge',
+        steps: 14,
+        description: 'Build meaningful relationships and improve social skills',
+        points: 280,
+        category: 'social-skills',
+        activities: [
+          'Have a meaningful conversation with someone new',
+          'Reach out to an old friend you haven\'t spoken to',
+          'Practice active listening in all conversations',
+          'Give someone a genuine compliment',
+          'Join a group activity or club',
+          'Practice empathy by understanding someone\'s perspective',
+          'Share something personal with a trusted friend',
+          'Help someone without expecting anything in return',
+          'Practice small talk with acquaintances',
+          'Invite someone to do an activity together',
+          'Express gratitude to someone who helped you',
+          'Practice conflict resolution skills if needed',
+          'Participate in a group discussion',
+          'Reflect on your social connections and plan to nurture them'
+        ]
+      }
+    ];
+    
+    // Form handling functions
+    window.showCreateForm = function() {
+      document.getElementById('create-form').style.display = 'block';
+      document.getElementById('create-form').scrollIntoView({ behavior: 'smooth' });
+    };
+    
+    window.hideCreateForm = function() {
+      document.getElementById('create-form').style.display = 'none';
+      document.getElementById('journey-form').reset();
+    };
+    
+    window.loadDefaultJourneys = async function() {
+      const btn = event.target;
+      const originalText = btn.textContent;
+      
+      btn.disabled = true;
+      btn.textContent = 'Loading...';
+      
+      try {
+        // Save default journeys to database
         const sid = await ensureSession();
-        await api.post('/api/journeys', { sessionId: sid, journeyKey: btn.dataset.key });
-        btn.textContent = 'Progress saved ✓';
+        let addedCount = 0;
+        
+        for (const journey of defaultJourneys) {
+          try {
+            await api.post('/api/journeys/create', { 
+              sessionId: sid, 
+              ...journey 
+            });
+            addedCount++;
+          } catch (error) {
+            console.warn('Failed to add journey:', journey.title, error.message);
+          }
+        }
+        
+        load();
+        showNotification(`Added ${addedCount} example journey(s) successfully!`, 'success');
+      } catch (error) {
+        console.error('Error loading default journeys:', error);
+        showNotification('Failed to load example journeys. Please try again.', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = originalText;
+      }
+    };
+    
+    // Notification system
+    function showNotification(message, type = 'info') {
+      // Remove existing notifications
+      const existing = document.querySelector('.notification');
+      if (existing) existing.remove();
+      
+      const notification = document.createElement('div');
+      notification.className = `notification notification-${type}`;
+      notification.innerHTML = `
+        <span>${message}</span>
+        <button onclick="this.parentElement.remove()" aria-label="Close">&times;</button>
+      `;
+      
+      document.body.appendChild(notification);
+      
+      // Auto-remove after 5 seconds
+      setTimeout(() => {
+        if (notification.parentElement) {
+          notification.remove();
+        }
+      }, 5000);
+    }
+    
+    // Duration selector handling
+    document.getElementById('journey-duration').addEventListener('change', function() {
+      const customDiv = document.getElementById('custom-duration');
+      if (this.value === 'custom') {
+        customDiv.style.display = 'block';
+      } else {
+        customDiv.style.display = 'none';
+      }
+    });
+    
+    // Form submission
+    document.getElementById('journey-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const submitBtn = this.querySelector('button[type="submit"]');
+      const originalText = submitBtn.textContent;
+      
+      // Disable form during submission
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Creating...';
+      
+      try {
+        const title = document.getElementById('journey-title').value.trim();
+        const description = document.getElementById('journey-description').value.trim();
+        const duration = document.getElementById('journey-duration').value;
+        const customDays = document.getElementById('custom-days').value;
+        const category = document.getElementById('journey-category').value;
+        const activitiesText = document.getElementById('journey-activities').value.trim();
+        
+        // Validation
+        if (!title) {
+          throw new Error('Please enter a journey title');
+        }
+        
+        if (title.length > 100) {
+          throw new Error('Title must be 100 characters or less');
+        }
+        
+        if (description.length > 500) {
+          throw new Error('Description must be 500 characters or less');
+        }
+        
+        const steps = duration === 'custom' ? parseInt(customDays) : parseInt(duration);
+        
+        if (duration === 'custom' && (!customDays || steps < 1 || steps > 365)) {
+          throw new Error('Custom duration must be between 1 and 365 days');
+        }
+        
+        if (!activitiesText) {
+          throw new Error('Please add at least one activity');
+        }
+        
+        const activities = activitiesText.split('\n').filter(a => a.trim()).map(a => a.trim());
+        
+        if (activities.length === 0) {
+          throw new Error('Please add at least one valid activity');
+        }
+        
+        // Check for activity length
+        for (let activity of activities) {
+          if (activity.length > 200) {
+            throw new Error('Each activity must be 200 characters or less');
+          }
+        }
+        
+        // If fewer activities than days, cycle through them
+        const finalActivities = [];
+        for (let i = 0; i < steps; i++) {
+          finalActivities.push(activities[i % activities.length]);
+        }
+        
+        const journey = {
+          key: title.toLowerCase().replace(/[^a-z0-9]/g, '-'),
+          title,
+          description,
+          steps,
+          points: steps * 20,
+          category,
+          activities: finalActivities,
+          custom: true
+        };
+        
+        const sid = await ensureSession();
+        await api.post('/api/journeys/create', { 
+          sessionId: sid, 
+          ...journey 
+        });
+        
+        hideCreateForm();
+        load();
+        
+        // Show success message
+        showNotification('Custom journey created successfully!', 'success');
+        
+      } catch (error) {
+        console.error('Journey creation error:', error);
+        let errorMessage = error.message;
+        
+        // Handle specific API errors
+        if (error.message.includes('429')) {
+          errorMessage = 'You\'re creating journeys too quickly. Please wait before creating another one.';
+        } else if (error.message.includes('409')) {
+          errorMessage = 'You already have a journey with this title. Please choose a different name.';
+        } else if (error.message.includes('400')) {
+          errorMessage = 'Please check your input and try again.';
+        } else if (!errorMessage || errorMessage === 'Failed to fetch') {
+          errorMessage = 'Failed to create journey. Please check your connection and try again.';
+        }
+        
+        showNotification(errorMessage, 'error');
+      } finally {
+        // Re-enable form
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+      }
+    });
+    
+    async function load(){
+      try {
+        const res = await api.get('/api/journeys');
+        allJourneys = res.journeys && res.journeys.length ? res.journeys : [];
+        
+        // If no journeys exist, show some default ones
+        if (allJourneys.length === 0) {
+          allJourneys = defaultJourneys.slice(0, 2); // Show first 2 as examples
+        }
+      } catch (error) {
+        console.error('Error loading journeys:', error);
+        allJourneys = defaultJourneys.slice(0, 2);
+      }
+      
+      // Calculate user stats
+      let totalPts = 0, activeCount = 0, stepsCount = 0;
+      allJourneys.forEach(j => {
+        const progress = userProgress[j.key] || 0;
+        if(progress > 0){
+          totalPts += Math.min(progress, j.steps) * (j.points / j.steps);
+          if(progress < j.steps) activeCount++;
+          stepsCount += Math.min(progress, j.steps);
+        }
+      });
+      
+      totalPoints.textContent = Math.round(totalPts);
+      activeJourneys.textContent = activeCount;
+      completedSteps.textContent = stepsCount;
+      
+      root.innerHTML = allJourneys.map(j => {
+        const progress = userProgress[j.key] || 0;
+        const progressPercent = Math.round((progress / j.steps) * 100);
+        const pointsEarned = Math.round((progress / j.steps) * j.points);
+        const currentActivity = j.activities ? j.activities[progress] || 'Journey completed!' : 'Continue your journey';
+        
+        return `<div class="card journey-card">
+          <div class="journey-header">
+            <h3>${j.title}</h3>
+            ${j.custom ? '<span class="custom-badge">Custom</span>' : ''}
+            <span class="category-badge">${j.category || 'general'}</span>
+          </div>
+          <p>${j.description || ''}</p>
+          <div class="current-activity">
+            <strong>Today's activity:</strong>
+            <p>${currentActivity}</p>
+          </div>
+          <div style="margin:12px 0">
+            <div style="background:var(--ring); height:8px; border-radius:4px; overflow:hidden">
+              <div style="background:var(--brand-2); height:100%; width:${progressPercent}%; transition:width 0.3s"></div>
+            </div>
+            <small style="color:var(--muted)">${progress}/${j.steps} steps • ${pointsEarned}/${j.points} points</small>
+          </div>
+          <div class="journey-actions">
+            <button class="btn btn-primary" data-key="${j.key}" ${progress >= j.steps ? 'disabled' : ''}>
+              ${progress >= j.steps ? 'Completed ✓' : 'Complete Today\'s Step'}
+            </button>
+            ${j.custom ? `<button class="btn btn-ghost btn-sm" onclick="deleteJourney('${j.key}')">Delete</button>` : ''}
+          </div>
+        </div>`;
+      }).join('');
+      
+      root.querySelectorAll('button[data-key]').forEach(btn=>btn.addEventListener('click', async ()=>{
+        const key = btn.dataset.key;
+        const sid = await ensureSession();
+        await api.post('/api/journeys', { sessionId: sid, journeyKey: key });
+        
+        // Update local progress
+        userProgress[key] = (userProgress[key] || 0) + 1;
+        
+        btn.textContent = 'Great job! ✓';
+        setTimeout(() => load(), 1000);
       }));
     }
+    
+    window.deleteJourney = async function(key) {
+      if (confirm('Are you sure you want to delete this custom journey?')) {
+        try {
+          const sid = await ensureSession();
+          await api.post('/api/journeys/delete', { sessionId: sid, journeyKey: key });
+          load();
+        } catch (error) {
+          alert('Error deleting journey: ' + error.message);
+        }
+      }
+    };
+    
     load();
   </script>
 </body>

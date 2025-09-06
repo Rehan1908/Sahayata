@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sahayata • Aapatkal (Emergency)</title>
+  <link href="../assets/css/style.css" rel="stylesheet" />
+  <meta name="robots" content="noindex" />
+  <meta name="description" content="Immediate help: call Tele‑MANAS, start a quick grounding, and see safety steps." />
+  <link rel="icon" href="data:," />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html"><span class="brand-mark">✦</span><span class="brand-text">Sahayata</span></a>
+      <nav class="primary-nav" aria-label="Primary">
+        <a href="./guide-enhanced.html" title="Personal Guide">Personal Guide</a>
+        <a href="./samvad.html" title="Anonymous community">Samvad</a>
+        <a href="./abhyas.html" title="Resilience toolkit">Abhyas</a>
+        <a href="./journeys.html" title="Wellness journeys">Journeys</a>
+        <a href="./professionals.html" title="Therapists">Professional Connect</a>
+        <a href="./section-5.html" title="Why Sahayata works">Why us</a>
+        <a class="nav-cta" href="tel:18005990019" aria-label="Aapatkal – Call Tele MANAS 24 by 7">Aapatkal</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <h1>Emergency help (Aapatkal)</h1>
+      <p class="lead">If you are in danger or thinking about harming yourself, please call now. You are not alone.</p>
+      <div class="actions">
+        <a class="btn btn-danger" href="tel:18005990019">Call Tele‑MANAS 24×7</a>
+        <button class="btn btn-secondary" id="grounding-btn">Do a 60‑second grounding</button>
+      </div>
+    </section>
+
+    <section class="narrow about card">
+      <h2>What to do right now</h2>
+      <ul>
+        <li>Call someone you trust or a helpline. Speaking to a person helps.</li>
+        <li>Remove anything around you that you could use to harm yourself.</li>
+        <li>Try the 60‑second grounding to steady your body and mind.</li>
+        <li>If you’re in a hostel, step into a safer, public space.</li>
+      </ul>
+    </section>
+  </main>
+
+  <!-- Grounding overlay modal (reused) -->
+  <div class="grounding-overlay" id="grounding-overlay" style="display:none" role="dialog" aria-modal="true" aria-labelledby="grounding-title">
+    <div class="grounding-dialog">
+      <div class="grounding-head">
+        <h3 class="grounding-title" id="grounding-title">60‑second grounding</h3>
+        <button class="grounding-close" id="grounding-close" aria-label="Close">Close</button>
+      </div>
+      <div class="grounding-body">
+        <div class="breath-ball" id="breath-ball"></div>
+        <div class="grounding-instruction" id="grounding-instruction">Inhale gently… 4 counts</div>
+        <div class="grounding-sub">Follow the circle as it grows (inhale), holds, and shrinks (exhale).</div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer"><div class="container footer-inner"><p>© <span id="year"></span> Sahayata</p></div></footer>
+  <script src="../assets/js/main.js"></script>
+  <script>
+    // Focus emergency action on load for accessibility
+    window.addEventListener('DOMContentLoaded', () => {
+      const cta = document.querySelector('.btn.btn-danger'); if(cta) cta.focus();
+    });
+  </script>
+</body>
+</html>

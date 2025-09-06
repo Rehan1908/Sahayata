@@ -1,7 +1,113 @@
-// basic interactivity
+// Global error handling and notification system
+window.addEventListener('error', function(e) {
+  console.error('Global error:', e.error);
+  showNotification('An unexpected error occurred. Please refresh the page.', 'error');
+});
+
+window.addEventListener('unhandledrejection', function(e) {
+  console.error('Unhandled promise rejection:', e.reason);
+  showNotification('Connection error. Please check your internet connection.', 'error');
+});
+
+// Notification system
+function showNotification(message, type = 'info', duration = 5000) {
+  // Remove existing notifications
+  const existing = document.querySelector('.notification');
+  if (existing) existing.remove();
+  
+  const notification = document.createElement('div');
+  notification.className = `notification notification-${type}`;
+  notification.textContent = message;
+  
+  // Add to page
+  document.body.appendChild(notification);
+  
+  // Auto remove
+  setTimeout(() => {
+    if (notification.parentNode) {
+      notification.remove();
+    }
+  }, duration);
+  
+  // Click to dismiss
+  notification.addEventListener('click', () => notification.remove());
+}
+
+// Enhanced API request with error handling
+async function makeAPIRequest(url, options = {}) {
+  try {
+    const response = await fetch(url, {
+      headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+      },
+      ...options
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.error || `HTTP ${response.status}: ${response.statusText}`);
+    }
+    
+    return await response.json();
+  } catch (error) {
+    console.error('API request failed:', error);
+    
+    if (error.name === 'TypeError' && error.message.includes('fetch')) {
+      throw new Error('Network error. Please check your connection.');
+    }
+    throw error;
+  }
+}
+
+// Rate limiting tracker for client-side
+const rateLimitTracker = {
+  limits: new Map(),
+  
+  checkLimit(endpoint, maxRequests = 5, windowMs = 60000) {
+    const now = Date.now();
+    const key = endpoint;
+    
+    if (!this.limits.has(key)) {
+      this.limits.set(key, { count: 1, resetTime: now + windowMs });
+      return { allowed: true, remaining: maxRequests - 1 };
+    }
+    
+    const limit = this.limits.get(key);
+    
+    if (now > limit.resetTime) {
+      this.limits.set(key, { count: 1, resetTime: now + windowMs });
+      return { allowed: true, remaining: maxRequests - 1 };
+    }
+    
+    if (limit.count >= maxRequests) {
+      return { 
+        allowed: false, 
+        error: `Please wait ${Math.ceil((limit.resetTime - now) / 1000)} seconds before trying again.`
+      };
+    }
+    
+    limit.count++;
+    return { allowed: true, remaining: maxRequests - limit.count };
+  }
+};
+
+// Basic interactivity with error handling
 (function(){
   const yearEl = document.getElementById('year');
   if(yearEl) yearEl.textContent = new Date().getFullYear();
+  // Inject floating emergency button on pages without one in view
+  try{
+    const hasNavCta = !!document.querySelector('.primary-nav .nav-cta');
+    const hasHeroCta = !!document.querySelector('.cta .btn.btn-danger');
+    const existingFloat = !!document.querySelector('.float-emergency');
+    if(!hasNavCta && !hasHeroCta && !existingFloat){
+      const div = document.createElement('div');
+      div.className = 'float-emergency';
+      div.innerHTML = '<a class="btn btn-danger" href="tel:18005990019" aria-label="Aapatkal – Call Tele MANAS 24 by 7">Aapatkal</a>';
+      document.body.appendChild(div);
+    }
+  }catch{ /* no-op */ }
 
   const groundingBtn = document.getElementById('grounding-btn');
   const overlay = document.getElementById('grounding-overlay');

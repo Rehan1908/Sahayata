@@ -10,12 +10,14 @@
   <header class="site-header">
     <div class="container header-inner">
       <a class="brand" href="../index.html"><span class="brand-mark">✦</span><span class="brand-text">Sahayata</span></a>
-      <nav class="primary-nav">
-        <a href="./guide.html" aria-current="page">Guide</a>
-        <a href="./samvad.html">Samvad</a>
-        <a href="./abhyas.html">Abhyas</a>
-        <a href="./journeys.html">Journeys</a>
-        <a href="./professionals.html">Professionals</a>
+      <nav class="primary-nav" aria-label="Primary">
+        <a href="./guide.html" aria-current="page" title="Personal Guide">Personal Guide</a>
+        <a href="./samvad.html" title="Anonymous community">Samvad</a>
+        <a href="./abhyas.html" title="Resilience toolkit">Abhyas</a>
+        <a href="./journeys.html" title="Wellness journeys">Journeys</a>
+        <a href="./professionals.html" title="Therapists">Professional Connect</a>
+  <a href="./section-5.html" title="Why Sahayata works">Why us</a>
+        <a class="nav-cta" href="tel:18005990019" aria-label="Aapatkal – Call Tele MANAS 24 by 7">Aapatkal</a>
       </nav>
     </div>
   </header>
@@ -84,7 +86,7 @@
     }
     function buildRecs(mood, area, pref){
       const r = [];
-      if(mood==='panicky') r.push({ title:'60‑second grounding', text:'Settle your body first.', href:'../index.html#' });
+  if(mood==='panicky') r.push({ title:'Emergency help (Aapatkal)', text:'Call now or do a 60‑second grounding.', href:'./aapatkal.html' });
       if(pref==='self'){
         r.push({ title:'Do a quick tool', text:'A 2‑minute practice to steady your mind.', href:'./abhyas.html' });
         r.push({ title:'Start a journey', text:'Build a small daily habit over time.', href:'./journeys.html' });
