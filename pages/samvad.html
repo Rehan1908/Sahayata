@@ -17,6 +17,11 @@
         <a href="./journeys.html" title="Wellness journeys">Journeys</a>
         <a href="./professionals.html" title="Therapists">Professional Connect</a>
         <a href="./section-5.html" title="Why Sahayata works">Why us</a>
+        <div class="user-menu">
+          <span class="user-name"></span>
+          <a href="#" class="logout-btn">Sign Out</a>
+        </div>
+        <a class="btn btn-ghost" href="./auth.html" id="auth-link">Sign In</a>
         <a class="nav-cta" href="tel:18005990019" aria-label="Aapatkal – Call Tele MANAS 24 by 7">Aapatkal</a>
       </nav>
     </div>
@@ -49,7 +54,7 @@
           <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px">
             <small style="color:var(--muted)"><span id="char-count">0</span>/2000 characters</small>
             <div>
-              <button type="submit" class="btn btn-primary">Post anonymously</button>
+              <button type="submit" class="btn btn-primary" data-auth-required="create a post">Post anonymously</button>
               <small id="post-msg" style="margin-left:10px"></small>
             </div>
           </div>
@@ -58,9 +63,13 @@
     </section>
   </main>
   <footer class="site-footer"><div class="container footer-inner"><p>© <span id="year"></span> Sahayata</p></div></footer>
+  
+  <!-- Script dependencies -->
+  <script src="../assets/js/main.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  
   <script type="module">
     import { api, ensureSession } from '../assets/js/app.js';
-    import '../assets/js/main.js';
     
     const topicSel = document.getElementById('topic');
     const feed = document.getElementById('feed');
@@ -121,6 +130,12 @@
     form.addEventListener('submit', async e => {
       e.preventDefault();
       msg.textContent = '';
+      
+      // Check authentication before posting
+      if (window.sahayataAuth && !window.sahayataAuth.isLoggedIn) {
+        window.sahayataAuth.requireAuth('create a post');
+        return;
+      }
       
       const textValue = text.value.trim();
       if(!textValue) {

@@ -158,11 +158,28 @@ async function handle(req, res){
   // Serve static files
   if(req.method === 'GET'){
     try{
-      let filePath = req.url === '/' ? '/index.html' : req.url;
-      filePath = path.join(__dirname, '..', filePath);
+      // IMPORTANT: strip query string when resolving file path
+      const u = new URL(req.url, 'http://localhost');
+      const ROOT = path.join(__dirname, '..');
+      let relPath = u.pathname === '/' ? '/index.html' : u.pathname;
+      // Make sure we always resolve a path relative to ROOT (Windows-safe)
+      // Remove any leading slashes so join doesn't treat it as absolute
+      relPath = decodeURIComponent(relPath);
+      relPath = path.normalize(relPath).replace(/^[/\\]+/, '');
+      let filePath = path.resolve(ROOT, relPath);
+
+      // Prevent path traversal outside of ROOT
+      if(!filePath.startsWith(ROOT)){
+        return json(res, 404, { ok:false, error: 'Not found' });
+      }
+
+      // If a directory is requested, try its index.html
+      if(fs.existsSync(filePath) && fs.statSync(filePath).isDirectory()){
+        filePath = path.join(filePath, 'index.html');
+      }
       
       if(fs.existsSync(filePath) && fs.statSync(filePath).isFile()){
-        const ext = path.extname(filePath);
+        const ext = path.extname(filePath).toLowerCase();
         const contentType = {
           '.html': 'text/html',
           '.css': 'text/css',
@@ -170,8 +187,10 @@ async function handle(req, res){
           '.json': 'application/json',
           '.png': 'image/png',
           '.jpg': 'image/jpeg',
+          '.jpeg': 'image/jpeg',
           '.gif': 'image/gif',
-          '.svg': 'image/svg+xml'
+          '.svg': 'image/svg+xml',
+          '.ico': 'image/x-icon'
         }[ext] || 'text/plain';
         
         res.writeHead(200, { 'Content-Type': contentType });

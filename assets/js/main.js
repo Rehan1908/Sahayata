@@ -256,3 +256,73 @@ const rateLimitTracker = {
     }
   });
 })();
+
+// Update user menu display
+function updateUserMenu() {
+  const userMenu = document.querySelector('.user-menu');
+  const authLink = document.getElementById('auth-link');
+  const userNameSpan = document.querySelector('.user-name');
+  
+  if (!userMenu || !authLink) return;
+  
+  const user = JSON.parse(localStorage.getItem('user') || 'null');
+  const token = localStorage.getItem('token');
+  
+  if (user && token) {
+    // User is logged in
+    userMenu.classList.add('active');
+    authLink.classList.add('hidden');
+    if (userNameSpan) {
+      userNameSpan.textContent = `Welcome, ${user.name}`;
+    }
+  } else {
+    // User is not logged in
+    userMenu.classList.remove('active');
+    authLink.classList.remove('hidden');
+  }
+}
+
+// Handle logout
+function handleLogout() {
+  localStorage.removeItem('token');
+  localStorage.removeItem('user');
+  updateUserMenu();
+  showNotification('Logged out successfully', 'success');
+  
+  // Redirect to home if on auth-required page
+  if (window.location.pathname.includes('auth.html')) {
+    window.location.href = '../index.html';
+  }
+}
+
+// Initialize user menu when DOM loads
+document.addEventListener('DOMContentLoaded', function() {
+  // Ensure auth system is available before updating UI
+  setTimeout(() => {
+    if (window.sahayataAuth) {
+      window.sahayataAuth.updateUI();
+    } else {
+      updateUserMenu();
+    }
+  }, 100);
+  
+  // Add logout handler
+  const logoutBtn = document.querySelector('.logout-btn');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      if (window.sahayataAuth) {
+        window.sahayataAuth.logout();
+      } else {
+        handleLogout();
+      }
+    });
+  }
+});
+
+// Update user menu when auth state changes
+window.addEventListener('storage', function(e) {
+  if (e.key === 'token' || e.key === 'user') {
+    updateUserMenu();
+  }
+});

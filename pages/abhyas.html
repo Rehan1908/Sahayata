@@ -16,7 +16,12 @@
         <a href="./abhyas.html" aria-current="page" title="Resilience toolkit">Abhyas</a>
         <a href="./journeys.html" title="Wellness journeys">Journeys</a>
         <a href="./professionals.html" title="Therapists">Professional Connect</a>
-  <a href="./section-5.html" title="Why Sahayata works">Why us</a>
+        <a href="./section-5.html" title="Why Sahayata works">Why us</a>
+        <div class="user-menu">
+          <span class="user-name"></span>
+          <a href="#" class="logout-btn">Sign Out</a>
+        </div>
+        <a class="btn btn-ghost" href="./auth.html" id="auth-link">Sign In</a>
         <a class="nav-cta" href="tel:18005990019" aria-label="Aapatkal – Call Tele MANAS 24 by 7">Aapatkal</a>
       </nav>
     </div>
@@ -57,9 +62,13 @@
     </section>
   </main>
   <footer class="site-footer"><div class="container footer-inner"><p>© <span id="year"></span> Sahayata</p></div></footer>
+  
+  <!-- Script dependencies -->
+  <script src="../assets/js/main.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  
   <script type="module">
     import { api, ensureSession } from '../assets/js/app.js';
-    import '../assets/js/main.js';
     const root = document.getElementById('tools');
     const filter = document.getElementById('filter-type');
     let allTools = [];

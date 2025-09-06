@@ -16,7 +16,12 @@
         <a href="./abhyas.html" title="Resilience toolkit">Abhyas</a>
         <a href="./journeys.html" aria-current="page" title="Wellness journeys">Journeys</a>
         <a href="./professionals.html" title="Therapists">Professional Connect</a>
-  <a href="./section-5.html" title="Why Sahayata works">Why us</a>
+        <a href="./section-5.html" title="Why Sahayata works">Why us</a>
+        <div class="user-menu">
+          <span class="user-name"></span>
+          <a href="#" class="logout-btn">Sign Out</a>
+        </div>
+        <a class="btn btn-ghost" href="./auth.html" id="auth-link">Sign In</a>
         <a class="nav-cta" href="tel:18005990019" aria-label="Aapatkal – Call Tele MANAS 24 by 7">Aapatkal</a>
       </nav>
     </div>
@@ -26,7 +31,7 @@
       <h1>Wellness Journeys</h1>
       <p class="lead">Gentle programs that build resilience over time. Earn points and badges as you develop healthy habits through small daily actions.</p>
       <div class="actions">
-        <button class="btn btn-primary" onclick="showCreateForm()">Create Custom Journey</button>
+        <button class="btn btn-primary" onclick="handleCreateJourney()" data-auth-required="create a journey">Create Custom Journey</button>
         <button class="btn btn-ghost" onclick="loadDefaultJourneys()">Load Examples</button>
       </div>
     </section>
@@ -94,7 +99,7 @@ Listen to calming music for 15 minutes" rows="8"></textarea>
             <small style="color: var(--muted);">Each line will become a daily step in your journey</small>
           </div>
           <div class="actions">
-            <button type="submit" class="btn btn-primary">Create Journey</button>
+            <button type="submit" class="btn btn-primary" data-auth-required="create a journey">Create Journey</button>
             <button type="button" class="btn btn-ghost" onclick="hideCreateForm()">Cancel</button>
           </div>
         </form>
@@ -131,9 +136,25 @@ Listen to calming music for 15 minutes" rows="8"></textarea>
     </section>
   </main>
   <footer class="site-footer"><div class="container footer-inner"><p>© <span id="year"></span> Sahayata</p></div></footer>
+  
+  <!-- Script dependencies -->
+  <script src="../assets/js/main.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  
   <script type="module">
     import { api, ensureSession } from '../assets/js/app.js';
-    import '../assets/js/main.js';
+    
+    // Handle journey creation with auth check
+    window.handleCreateJourney = function() {
+      // Check if user is authenticated
+      if (window.sahayataAuth && !window.sahayataAuth.isLoggedIn) {
+        window.sahayataAuth.requireAuth('create a journey');
+        return;
+      }
+      // If authenticated, show the create form
+      showCreateForm();
+    };
+    
     const root = document.getElementById('list');
     const totalPoints = document.getElementById('total-points');
     const activeJourneys = document.getElementById('active-journeys');
@@ -377,6 +398,12 @@ Listen to calming music for 15 minutes" rows="8"></textarea>
     // Form submission
     document.getElementById('journey-form').addEventListener('submit', async function(e) {
       e.preventDefault();
+      
+      // Check authentication before creating journey
+      if (window.sahayataAuth && !window.sahayataAuth.isLoggedIn) {
+        window.sahayataAuth.requireAuth('create a journey');
+        return;
+      }
       
       const submitBtn = this.querySelector('button[type="submit"]');
       const originalText = submitBtn.textContent;

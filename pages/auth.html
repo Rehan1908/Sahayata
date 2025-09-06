@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login • Sahayata</title>
+  <link href="../assets/css/style.css" rel="stylesheet" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html"><span class="brand-mark">✦</span><span class="brand-text">Sahayata</span></a>
+      <nav class="primary-nav">
+        <a href="../index.html">Home</a>
+        <a href="./guide.html">Personal Guide</a>
+        <a href="./samvad.html">Samvad</a>
+        <a href="./abhyas.html">Abhyas</a>
+        <a href="./journeys.html">Journeys</a>
+        <a href="./professionals.html">Professional Connect</a>
+        <a href="./section-5.html">Why us</a>
+        <a class="nav-cta" href="tel:18005990019" aria-label="Aapatkal – Call Tele MANAS 24 by 7">Aapatkal</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <h1>Welcome back</h1>
+      <p class="lead">Sign in to continue your mental health journey</p>
+    </section>
+
+    <section class="narrow card">
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-tab="login">Sign In</button>
+        <button class="auth-tab" data-tab="register">Create Account</button>
+      </div>
+
+      <!-- Login Form -->
+      <form id="login-form" class="auth-form active">
+        <h2>Sign In</h2>
+        <div class="form-group">
+          <label for="login-email">Email</label>
+          <input type="email" id="login-email" required placeholder="your@email.com">
+        </div>
+        <div class="form-group">
+          <label for="login-password">Password</label>
+          <input type="password" id="login-password" required placeholder="Your password">
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Sign In</button>
+          <button type="button" class="btn btn-ghost" id="forgot-password">Forgot Password?</button>
+        </div>
+        <div id="login-message" class="message"></div>
+      </form>
+
+      <!-- Registration Form -->
+      <form id="register-form" class="auth-form">
+        <h2>Create Account</h2>
+        <div class="form-group">
+          <label for="register-name">Full Name</label>
+          <input type="text" id="register-name" required placeholder="Your full name">
+        </div>
+        <div class="form-group">
+          <label for="register-email">Email</label>
+          <input type="email" id="register-email" required placeholder="your@email.com">
+        </div>
+        <div class="form-group">
+          <label for="register-password">Password</label>
+          <input type="password" id="register-password" required placeholder="Choose a strong password" minlength="8">
+          <small>Minimum 8 characters</small>
+        </div>
+        <div class="form-group">
+          <label for="register-confirm">Confirm Password</label>
+          <input type="password" id="register-confirm" required placeholder="Confirm your password">
+        </div>
+        <div class="form-group checkbox-group">
+          <label>
+            <input type="checkbox" id="terms-agree" required>
+            I agree to the <a href="./privacy.html" target="_blank">Terms of Service and Privacy Policy</a>
+          </label>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Create Account</button>
+        </div>
+        <div id="register-message" class="message"></div>
+      </form>
+
+      <!-- Forgot Password Form -->
+      <form id="forgot-password-form" class="auth-form" style="display: none;">
+        <h2>Reset Password</h2>
+        <p class="text-muted">Enter your email address and we'll help you reset your password.</p>
+        <div class="form-group">
+          <label for="forgot-email">Email</label>
+          <input type="email" id="forgot-email" required placeholder="your@email.com">
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Send Reset Link</button>
+          <button type="button" class="btn btn-ghost" id="back-to-login">Back to Sign In</button>
+        </div>
+        <div id="forgot-message" class="message"></div>
+      </form>
+
+      <div class="auth-footer">
+        <p>Your privacy is our priority. All data is encrypted and never shared with third parties.</p>
+        <p><strong>Anonymous mode:</strong> You can always browse and read content without an account.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© <span id="year"></span> Sahayata • Privacy‑first • Student‑first</p>
+    </div>
+  </footer>
+
+  <script src="../assets/js/main.js"></script>
+  <script src="../assets/js/auth.js"></script>
+</body>
+</html>
