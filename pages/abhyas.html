@@ -59,6 +59,40 @@
     <section class="narrow about">
       <h2>About these practices</h2>
       <p>Each tool is based on proven therapeutic techniques adapted specifically for student life. These aren't just articles—they're active exercises designed to build skills you can use immediately and for life.</p>
+      
+      <div style="margin-top: 30px; padding: 20px; background: rgba(220, 38, 127, 0.1); border-radius: 8px; border-left: 4px solid var(--brand);">
+        <h3 style="color: var(--brand); margin-top: 0;">🆘 Need Immediate Help?</h3>
+        <p><strong>Crisis Support:</strong></p>
+        <ul style="margin: 10px 0;">
+          <li><strong>Tele-MANAS:</strong> <a href="tel:14416" style="color: var(--brand); font-weight: 600;">14416</a> (24/7 National Mental Health Helpline)</li>
+          <li><strong>Emergency:</strong> <a href="tel:112" style="color: var(--brand); font-weight: 600;">112</a> (Police/Medical Emergency)</li>
+          <li><strong>NIMHANS Helpline:</strong> <a href="tel:+918025564447" style="color: var(--brand); font-weight: 600;">080-2556-4447</a></li>
+          <li><strong>Vandrevala Foundation:</strong> <a href="tel:+919999666555" style="color: var(--brand); font-weight: 600;">9999-666-555</a> (24/7 Free Counseling)</li>
+        </ul>
+        <p style="font-size: 14px; margin-bottom: 0;"><em>Remember: Reaching out for help is a sign of strength, not weakness. You matter and your life has value.</em></p>
+      </div>
+      
+      <div style="margin-top: 20px; padding: 20px; background: rgba(52, 152, 219, 0.1); border-radius: 8px; border-left: 4px solid #3498db;">
+        <h3 style="color: #3498db; margin-top: 0;">🔗 Trusted Mental Health Resources</h3>
+        <div style="display: grid; gap: 15px; margin-top: 15px;">
+          <div>
+            <strong>🏥 Professional Organizations:</strong><br>
+            <a href="https://www.nimhans.ac.in/" target="_blank" style="color: #3498db;">NIMHANS</a> - National Institute of Mental Health<br>
+            <a href="https://indianpsychiatryassociation.com/" target="_blank" style="color: #3498db;">Indian Psychiatric Association</a> - Find qualified psychiatrists
+          </div>
+          <div>
+            <strong>📱 Verified Apps & Platforms:</strong><br>
+            <a href="https://www.7cups.com/" target="_blank" style="color: #3498db;">7 Cups</a> - Free emotional support<br>
+            <a href="https://www.yourdost.com/" target="_blank" style="color: #3498db;">YourDOST</a> - Online counseling for students<br>
+            <a href="https://www.manasthali.org/" target="_blank" style="color: #3498db;">Manasthali</a> - Mental health support in Indian languages
+          </div>
+          <div>
+            <strong>📚 Self-Help Resources:</strong><br>
+            <a href="https://www.cci.health.wa.gov.au/Resources/Looking-After-Yourself" target="_blank" style="color: #3498db;">CCI Self-Help Workbooks</a> - Free CBT workbooks<br>
+            <a href="https://www.mindful.org/" target="_blank" style="color: #3498db;">Mindful.org</a> - Meditation and mindfulness guides
+          </div>
+        </div>
+      </div>
     </section>
   </main>
   <footer class="site-footer"><div class="container footer-inner"><p>© <span id="year"></span> Sahayata</p></div></footer>
@@ -88,16 +122,20 @@
     function getDefaultTools() {
       return [
         { key:'breathing', title:'Guided breathing meditation', type:'meditation', minutes:2, description:'Calm your racing mind with gentle breath awareness' },
-        { key:'quick-relaxation', title:'Why you should relax', type:'meditation', minutes:1, description:'Quick reminder on the importance of taking breaks' },
-        { key:'thought-diary', title:'Interactive thought diary', type:'journal', minutes:5, description:'Clear your head by writing down what\'s bothering you' },
-        { key:'mindful-study', title:'Mindful studying technique', type:'guide', minutes:5, description:'Study with focus and less anxiety' },
-        { key:'exam-anxiety', title:'Managing exam anxiety', type:'guide', minutes:7, description:'Practical steps to handle exam stress' },
-        { key:'placement-stress', title:'Coping with placement pressure', type:'guide', minutes:6, description:'Navigate job search anxiety with confidence' },
-        { key:'sleep-hygiene', title:'Better sleep habits', type:'guide', minutes:4, description:'Step-by-step guide to quality rest' },
-        { key:'time-management', title:'Time management for students', type:'guide', minutes:8, description:'Organize your day to reduce overwhelm' },
-        { key:'gratitude-practice', title:'Daily gratitude exercise', type:'exercise', minutes:3, description:'Build positivity with simple appreciation' },
-        { key:'hostel-loneliness', title:'Dealing with hostel loneliness', type:'guide', minutes:6, description:'Connect with others and feel less isolated' },
-        { key:'parental-pressure', title:'Managing parental expectations', type:'guide', minutes:5, description:'Navigate family pressure with healthy boundaries' }
+        { key:'quick-relaxation', title:'Stress relief meditation', type:'meditation', minutes:5, description:'Quick guided meditation to release tension and anxiety' },
+        { key:'thought-diary', title:'CBT thought diary worksheet', type:'journal', minutes:10, description:'Identify and challenge negative thinking patterns' },
+        { key:'mindful-study', title:'Mindful studying technique', type:'guide', minutes:5, description:'Study with focus and less anxiety using mindfulness' },
+        { key:'exam-anxiety', title:'Exam anxiety management guide', type:'guide', minutes:7, description:'NIMHANS guide for handling exam stress and panic' },
+        { key:'placement-stress', title:'Job search stress management', type:'guide', minutes:8, description:'Navigate placement pressure and career anxiety' },
+        { key:'sleep-hygiene', title:'Better sleep for students', type:'guide', minutes:6, description:'Improve sleep quality in hostel and dorm environments' },
+        { key:'time-management', title:'Time management mastery', type:'guide', minutes:10, description:'Balance academics, social life, and self-care effectively' },
+        { key:'gratitude-practice', title:'Daily gratitude journal', type:'exercise', minutes:3, description:'Build resilience through appreciation practice' },
+        { key:'hostel-loneliness', title:'Overcoming loneliness', type:'guide', minutes:8, description:'Connect with others and build meaningful relationships' },
+        { key:'parental-pressure', title:'Managing family expectations', type:'guide', minutes:6, description:'Navigate parental pressure while maintaining mental health' },
+        { key:'panic-help', title:'Panic attack emergency toolkit', type:'exercise', minutes:3, description:'Immediate techniques to manage panic and overwhelming anxiety' },
+        { key:'crisis-support', title:'24/7 Crisis helpline access', type:'exercise', minutes:1, description:'Direct access to Tele-MANAS national mental health support' },
+        { key:'self-harm-help', title:'Self-harm support resources', type:'guide', minutes:5, description:'Professional resources for those struggling with self-injury' },
+        { key:'depression-help', title:'Understanding depression', type:'guide', minutes:10, description:'NIMHANS self-help guide for recognizing and managing depression' }
       ];
     }
     
